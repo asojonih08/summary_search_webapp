@@ -1,10 +1,11 @@
-import Image from "next/image";
+import SearchCard from "@/components/SearchCard";
 
 export default function Home() {
   return (
-    <div className="">
-      <main className="">
-        </main>
+    <div className="w-full h-full flex justify-center">
+      <main>
+        <SearchCard />
+      </main>
     </div>
   );
 }

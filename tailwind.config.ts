@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 export default {
+  darkMode: "selector",
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -11,8 +12,19 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        mainBackgroundDark: "#202222",
+        contentBackgroundDark: "#191A1A",
+        borderMain: "#3D3F40",
+        textMainDark: "#e8e8e8",
+        textOffDark: "#8D9191",
+        caretColor: "#15808d",
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 } satisfies Config;

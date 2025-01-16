@@ -24,6 +24,6 @@ export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <motion.nav animate={isOpen ? "open" : "close"} variants={containerVariants} className={`min-h-[100vh] bg-[#202222] `}><button onClick={()=>setIsOpen(!isOpen)}>{isOpen ? "Close": "Open"}</button></motion.nav>
+    <motion.nav animate={isOpen ? "open" : "close"} variants={containerVariants} className={`min-h-[100vh] dark:bg-mainBackgroundDark `}><button onClick={()=>setIsOpen(!isOpen)}>{isOpen ? "Close": "Open"}</button></motion.nav>
   )
 }

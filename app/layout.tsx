@@ -1,16 +1,45 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
+import localFont from "next/font/local";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+// const geistSans = Geist({
+//   variable: "--font-geist-sans",
+//   subsets: ["latin"],
+// });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+// });
+const fkGroteskNeue = localFont({
+  src: [
+    {
+      path: "../public/FKGroteskNeue-Thin.otf",
+      weight: "100",
+      style: "normal",
+    },
+    {
+      path: "../public/FKGroteskNeue-Light.otf",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../public/FKGroteskNeue-Regular.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/FKGroteskNeue-Medium.otf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../public/FKGroteskNeue-Bold.otf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
 });
 
 export const metadata: Metadata = {
@@ -24,18 +53,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html class="dark" lang="en">
+      <body className={`${fkGroteskNeue.className} antialiased`}>
         <main>
           <div className="flex h-full min-h-[100dvh">
             <Sidebar />
-            <div className="bg-[#202222] w-full flex justify-center">
-              <div className="rounded-lg bg-[#191A1A] w-full mr-2.5 h-[98.5%] top-0 bottom-0 my-auto border border-gray-400/10 shadow-sm"></div>
+            <div className="dark:bg-mainBackgroundDark w-full flex justify-center">
+              <div className="dark:bg-contentBackgroundDark rounded-lg w-full mr-2.5 h-[98.5%] top-0 bottom-0 my-auto border border-gray-400/10 shadow-sm p-20 right-0 left-0">
+                {children}
+              </div>
             </div>
-        {children}
-        </div>
+          </div>
         </main>
       </body>
     </html>
