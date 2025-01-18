@@ -2,31 +2,32 @@
 import React, { useRef, useState } from "react";
 import SearchInput from "@/components/SearchInput";
 import SearchCardActions from "@/components/SearchCardActions";
-import axios from "axios";
-
-// async function getGoogleSuggestions(query: string): Promise<string[]> {
-//   if (query.length === 0) return Promise.resolve([]);
-
-//   const response = await axios.get(
-//     `https://suggestqueries.google.com/complete/search?client=chrome-omni&q=${query}`
-//   );
-//   const suggestions = await response.data;
-//   return suggestions[1];
-// }
+import { ArrowUpLeft } from "lucide-react";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useQuery } from "@tanstack/react-query";
+import { fetchSuggestions } from "@/actions/getSuggestions";
 
 export default function SearchCard() {
   const [inputFocused, setInputFocused] = useState<boolean>(false);
   const [searchInput, setSearchInput] = useState<string>("");
+  const debouncedQuery = useDebounce(searchInput, 300); // Debounce for 300ms
   // const suggestions = await getGoogleSuggestions("nodejs");
+  // const suggestions = ["elon musk", "ebay", "3", "4"];
   // console.log(suggestions);
+  const { data: suggestions, isLoading } = useQuery({
+    queryKey: ["suggestions", debouncedQuery],
+    queryFn: () => fetchSuggestions(debouncedQuery),
+    enabled: !!debouncedQuery, // Fetch only when there's a query
+  });
+
   return (
     <div>
       <div
         className={`${
           inputFocused
-            ? "dark:border-borderMain rounded-t-md "
-            : "dark:border-borderMain/50 rounded-md"
-        } dark:bg-mainBackgroundDark border-[1.9px] transition-colors duration-200 shadow-sm w-[640px] h-[114px] flex flex-col pt-4 pb-0`}
+            ? "dark:border-borderMain/75 rounded-t-md ring-1 ring-borderMain"
+            : "dark:border-borderMain/75 rounded-md"
+        } dark:bg-mainBackgroundDark border-[1px] transition-colors duration-200 shadow-sm w-[640px] h-[114px] flex flex-col pt-4 pb-0`}
       >
         {/* <p>{suggestions}</p> */}
         <div className="basis-[42%] px-4">
@@ -40,11 +41,29 @@ export default function SearchCard() {
           <SearchCardActions searchInput={searchInput} />
         </div>
       </div>
-      {searchInput.length > 0 && inputFocused && (
-        <div
-          className={`dark:border-borderMain dark:bg-mainBackgroundDark border-x-[1.9px] border-b-[1.9px] transition-colors duration-200 rounded-b-md shadow-sm w-[640px] h-[114px] flex flex-col pt-4 pb-0`}
-        ></div>
-      )}
+      {searchInput.length > 0 &&
+        inputFocused &&
+        suggestions &&
+        suggestions.length > 0 && (
+          <div
+            className={`dark:border-borderMain/75 ring-1 ring-borderMain dark:bg-mainBackgroundDark border-x-[1px] border-b-[1px] transition-colors duration-200 rounded-b-md shadow-sm w-[640px] h-auto flex flex-col px-2 pb-1.5`}
+          >
+            <ul>
+              {suggestions &&
+                suggestions.map((suggestion, index) => (
+                  <li
+                    key={index}
+                    className={`${
+                      index === 0 ? "pt-2.5" : "pt-[18px]"
+                    } dark:text-textMainDark/90 text-[14px] font-medium flex justify-between cursor-pointer`}
+                  >
+                    <span>{suggestion}</span>
+                    <ArrowUpLeft className="dark:text-textOffDark/90 h-4 w-4" />
+                  </li>
+                ))}
+            </ul>
+          </div>
+        )}
     </div>
   );
 }

@@ -22,7 +22,7 @@ export default function SearchInput({
       onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
         setSearchInput(e.target.value);
       }}
-      className="dark:text-textMainDark caret-caretColor p-0 placeholder:text-base dark:bg-mainBackgroundDark min-h-full [resize:none] border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+      className="dark:text-textMainDark caret-caretColor p-0 placeholder:text-base text-base dark:bg-mainBackgroundDark min-h-full [resize:none] border-none focus-visible:ring-0 focus-visible:ring-offset-0"
     ></Textarea>
   );
 }

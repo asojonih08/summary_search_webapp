@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import localFont from "next/font/local";
+import { ReactQueryClientProvider } from "@/components/QueryClientProvider";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -12,6 +13,7 @@ import localFont from "next/font/local";
 //   variable: "--font-geist-mono",
 //   subsets: ["latin"],
 // });
+
 const fkGroteskNeue = localFont({
   src: [
     {
@@ -53,19 +55,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html class="dark" lang="en">
-      <body className={`${fkGroteskNeue.className} antialiased`}>
-        <main>
-          <div className="flex h-full min-h-[100dvh">
-            <Sidebar />
-            <div className="dark:bg-mainBackgroundDark w-full flex justify-center">
-              <div className="dark:bg-contentBackgroundDark rounded-lg w-full mr-2.5 h-[98.5%] top-0 bottom-0 my-auto border border-gray-400/10 shadow-sm p-20 right-0 left-0">
-                {children}
+    <ReactQueryClientProvider>
+      <html className="dark" lang="en">
+        <body className={`${fkGroteskNeue.className} antialiased`}>
+          <main>
+            <div className="flex h-full min-h-[100dvh">
+              <Sidebar />
+              <div className="dark:bg-mainBackgroundDark w-full flex justify-center">
+                <div className="dark:bg-contentBackgroundDark rounded-lg w-full mr-2.5 h-[98.5%] top-0 bottom-0 my-auto border border-gray-400/10 shadow-sm p-20 right-0 left-0">
+                  {children}
+                </div>
               </div>
             </div>
-          </div>
-        </main>
-      </body>
-    </html>
+          </main>
+        </body>
+      </html>
+    </ReactQueryClientProvider>
   );
 }
