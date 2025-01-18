@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ListFilter, ArrowRight } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
@@ -9,6 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { getSummary } from "@/actions/getSummary";
 
 interface SearchCardActionsProps {
   searchInput: string;
@@ -17,6 +19,11 @@ interface SearchCardActionsProps {
 export default function SearchCardActions({
   searchInput,
 }: SearchCardActionsProps) {
+  const router = useRouter();
+  async function handleSearchSubmit() {
+    console.log("handleSearchSubmit");
+    router.push(`/search/new?search=${searchInput}`);
+  }
   return (
     <div className="flex justify-between items-center h-full dark:text-textOffDark">
       <TooltipProvider delayDuration={300}>
@@ -44,6 +51,7 @@ export default function SearchCardActions({
           <span>Pro</span>
         </div>
         <Button
+          onClick={() => handleSearchSubmit()}
           className={`${
             searchInput.length > 0
               ? "dark:bg-[#20B8CD] hover:dark:bg-[#20B8CD]/80 "
