@@ -18,6 +18,7 @@ export default {
         textMainDark: "#e8e8e8",
         textOffDark: "#8D9191",
         caretColor: "#15808d",
+        offsetPlusDark: "#2D2F2F",
       },
       borderRadius: {
         lg: "var(--radius)",

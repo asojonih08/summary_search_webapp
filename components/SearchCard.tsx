@@ -29,7 +29,6 @@ export default function SearchCard() {
             : "dark:border-borderMain/75 rounded-md"
         } dark:bg-mainBackgroundDark border-[1px] transition-colors duration-200 shadow-sm w-[640px] h-[114px] flex flex-col pt-4 pb-0`}
       >
-        {/* <p>{suggestions}</p> */}
         <div className="basis-[42%] px-4">
           <SearchInput
             setInputFocused={setInputFocused}
@@ -64,6 +63,7 @@ export default function SearchCard() {
             </ul>
           </div>
         )}
+      {}
     </div>
   );
 }
