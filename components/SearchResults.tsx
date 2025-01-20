@@ -6,14 +6,18 @@ import Sources from "./Sources";
 import { Separator } from "@/components/ui/separator";
 import SummaryActions from "./SummaryActions";
 import Related from "./Related";
-
-function formatSummary(summary: string) {
-  return summary.replaceAll("\n", "\n");
-}
+import { getSummary } from "@/actions/getSummary";
+import { useQuery } from "@tanstack/react-query";
 
 export default function SearchResults() {
   const searchParams = useSearchParams();
   const search_query = searchParams.get("q") || "";
+  const { data: summary, isLoading } = useQuery({
+    queryKey: ["summary"],
+    queryFn: () => getSummary(search_query),
+    enabled: !!search_query, // Fetch only when there's a query
+  });
+  console.log(summary?.answer);
   console.log(search_query);
 
   return (
@@ -21,8 +25,8 @@ export default function SearchResults() {
       <div className="basis-[60%]">
         <h2 className="text-3xl dark:text-textMainDark mb-9">{search_query}</h2>
         <div className="flex flex-col gap-7">
-          <Sources />
-          <Answer />
+          <Sources summary={summary} isLoading={isLoading} />
+          <Answer summary={summary} isLoading={isLoading} />
         </div>
         <SummaryActions />
         <Separator className="w-full h-[0.2px] mt-9 mb-8 dark:bg-borderMain/50 " />

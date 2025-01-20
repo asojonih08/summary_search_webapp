@@ -23,7 +23,7 @@ export default function SummaryActions() {
     setTimeout(handleCopyTimeout, 2000);
   }
   return (
-    <div className="flex justify-between dark:text-textOffDark mt-2">
+    <div className="flex justify-between dark:text-textOffDark mt-3">
       <div className="flex gap-1">
         <TooltipProvider delayDuration={300}>
           <Tooltip>

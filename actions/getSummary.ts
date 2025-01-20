@@ -1,8 +1,10 @@
 "use server";
 
-export async function getSummary(query: string): Promise<string> {
+export async function getSummary(
+  query: string
+): Promise<{ [key: string]: string }> {
   if (query.length === 0) {
-    return "Please provide a valid search query.";
+    return { something_went_wrong: "Please provide a valid search query." };
   }
 
   try {
@@ -22,10 +24,20 @@ export async function getSummary(query: string): Promise<string> {
 
     const data = await response.json();
 
+    const summary: { [key: string]: string } = {};
+    if (data.inference && data.search_results) {
+      summary["answer"] = data.inference;
+      console.log(summary["answer"]);
+      summary["search_results"] = JSON.stringify(data.search_results);
+      console.log(typeof summary["search_results"]);
+    }
+
     // Ensure the `response` field is handled correctly
-    return data.response || "No summary available.";
+    return summary;
   } catch (error) {
     console.error("Error fetching summary:", error);
-    return "An error occurred while fetching the summary.";
+    return {
+      something_went_wrong: "An error occurred while fetching the summary.",
+    };
   }
 }

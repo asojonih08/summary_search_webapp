@@ -12,6 +12,7 @@ interface SourceCardProps {
   image?: string;
   images?: [string];
   source: string;
+  snippet: string;
 }
 
 export default function SourceCard({
@@ -20,7 +21,9 @@ export default function SourceCard({
   image,
   images,
   source,
+  snippet,
 }: SourceCardProps) {
+  const title_split = title.split(" ");
   return (
     <TooltipProvider delayDuration={300}>
       <Tooltip open={variant === "multiple sources" ? false : undefined}>
@@ -29,11 +32,13 @@ export default function SourceCard({
             <div
               className={`${
                 variant === "multiple sources" ? "justify-between" : ""
-              } dark:text-textMainDark text-left text-xs flex flex-col gap-1 h-full`}
+              } dark:text-textMainDark text-left text-xs flex flex-col justify-between gap-1 h-full`}
             >
               {variant === "regular" && (
                 <p>
-                  Elon Musk weighs in on SpaceX Starships' 'rapid unscheduled...
+                  {title_split.length < 9
+                    ? title_split.join(" ")
+                    : title_split.slice(0, 9).join(" ") + "..."}
                 </p>
               )}
               {variant === "multiple sources" && (
@@ -60,15 +65,10 @@ export default function SourceCard({
           </div>
           <a href="">
             <h3 className="text-sm font-medium h-full dark:hover:text-superDark transition-colors duration-150">
-              Elon Musk weighs in on SpaceX Starships' 'rapid unscheduled...{" "}
-              {/*{title} */}
+              {title}
             </h3>
           </a>
-          <p className="text-sm h-full">
-            Our guide to the best running shoes available at the moment,
-            including best race shoes, best cushioned shoes, best daily shoes
-            and value options
-          </p>
+          <p className="text-sm h-full">{snippet}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
