@@ -26,9 +26,10 @@ export default function Sources({ summary, isLoading }: SourcesProps) {
                   variant={index === 3 ? "multiple sources" : "regular"}
                   key={index}
                   title={source.title}
-                  image={""}
+                  image={source.pagemap.cse_thumbnail.src}
                   snippet={source.snippet}
-                  source={source.displayLink} // Use the actual source data
+                  displayLink={source.displayLink} // Use the actual source data
+                  link={source.link}
                 />
               ))
           : ""}
