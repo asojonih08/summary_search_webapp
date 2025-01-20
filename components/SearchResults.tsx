@@ -5,6 +5,7 @@ import Answer from "./Answer";
 import Sources from "./Sources";
 import { Separator } from "@/components/ui/separator";
 import SummaryActions from "./SummaryActions";
+import Related from "./Related";
 
 function formatSummary(summary: string) {
   return summary.replaceAll("\n", "\n");
@@ -24,7 +25,8 @@ export default function SearchResults() {
           <Answer />
         </div>
         <SummaryActions />
-        <Separator className="w-full h-[0.2px] my-10 dark:bg-borderMain/50 " />
+        <Separator className="w-full h-[0.2px] mt-9 mb-8 dark:bg-borderMain/50 " />
+        <Related />
       </div>
     </div>
   );
