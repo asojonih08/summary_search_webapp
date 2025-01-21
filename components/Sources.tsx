@@ -21,17 +21,28 @@ export default function Sources({ summary, isLoading }: SourcesProps) {
           : summary && summary["search_results"]
           ? JSON.parse(summary.search_results)
               .items.slice(0, 4)
-              .map((source: any, index: number) => (
-                <SourceCard
-                  variant={index === 3 ? "multiple sources" : "regular"}
-                  key={index}
-                  title={source.title}
-                  image={source.pagemap.cse_thumbnail.src}
-                  snippet={source.snippet}
-                  displayLink={source.displayLink} // Use the actual source data
-                  link={source.link}
-                />
-              ))
+              .map(
+                (source: any, index: number) =>
+                  source && (
+                    <SourceCard
+                      variant={index === 3 ? "multiple sources" : "regular"}
+                      key={index}
+                      title={source.title}
+                      snippet={source.snippet}
+                      displayLink={source.displayLink} // Use the actual source data
+                      link={source.link}
+                      images={
+                        index === 3
+                          ? JSON.parse(summary.search_results)
+                              .items.slice(4, 9)
+                              .map((item: any) => {
+                                return item.displayLink ?? "";
+                              })
+                          : ""
+                      }
+                    />
+                  )
+              )
           : ""}
       </div>
     </div>

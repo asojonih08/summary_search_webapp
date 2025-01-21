@@ -10,7 +10,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 interface SourceCardProps {
   variant: string;
   title: string;
-  image?: string;
   images?: [string];
   displayLink: string;
   link: string;
@@ -20,7 +19,6 @@ interface SourceCardProps {
 export default function SourceCard({
   variant,
   title,
-  image,
   images,
   displayLink,
   link,
@@ -29,11 +27,28 @@ export default function SourceCard({
   const titleSplit = title.split(" ");
   const condesedDisplayLink = displayLink.split(".").at(-2);
   const faviconFromGoogle = `https://www.google.com/s2/favicons?domain=${displayLink}&sz=${128}`;
+  const favicons =
+    variant === "multiple sources"
+      ? images?.map(
+          (image, index) =>
+            `https://www.google.com/s2/favicons?domain=${image}&sz=${128}`
+        )
+      : [];
   const avatar = (
     <Avatar className="w-4 h-4">
       <AvatarImage src={faviconFromGoogle} />
       <AvatarFallback>CN</AvatarFallback>
     </Avatar>
+  );
+  const avatars = (
+    <div className="flex gap-1">
+      {favicons?.map((favicon, index) => (
+        <Avatar className="w-[18px] h-[18px]">
+          <AvatarImage src={favicon} />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+      ))}
+    </div>
   );
   return (
     <TooltipProvider delayDuration={300}>
@@ -57,7 +72,7 @@ export default function SourceCard({
                 </p>
               )}
               {variant === "multiple sources" && (
-                <span className="">OOOOO</span>
+                <span className="">{avatars}</span>
               )}
               <div className="flex gap-1 items-center">
                 {variant === "regular" && avatar}

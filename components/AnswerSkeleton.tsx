@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 export default function AnswerSkeleton() {
   return (
-    <div className="w-full h-[21vh] dark:bg-mainBackgroundDark dark:border-borderMain/20 border rounded-lg shadow-lg p-6">
+    <div className="w-full h-[210px] dark:bg-mainBackgroundDark dark:border-borderMain/20 border rounded-lg shadow-lg p-6">
       <div className="space-y-2">
         <motion.div
           initial={{ width: "0%" }}
