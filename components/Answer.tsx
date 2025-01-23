@@ -93,13 +93,6 @@ export default function Answer({ summary, isLoading }: AnswerProps) {
         {isLoading ? (
           <AnswerSkeleton />
         ) : (
-          // <span className="text-base">
-          //   {/* {summary &&
-          //     (summary["answer"]
-          //       ? processedText
-          //       : summary["something_went_wrong"])} */}
-          //   <span className="">{jsxAnswer}</span>
-          // </span>
           <span className="justify-center items-center">
             {jsxAnswer.map((element: any) => element)}
           </span>
