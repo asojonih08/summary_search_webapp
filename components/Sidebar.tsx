@@ -19,6 +19,7 @@ const containerVariants = {
   },
   open: {
     width: "220px",
+    minWidth: "220px",
     transition: {
       type: "easeInOut",
       duration: 0.3,
@@ -35,7 +36,7 @@ export default function Sidebar() {
       animate={isOpen ? "open" : "close"}
       variants={containerVariants}
       className={`${
-        isOpen ? "min-w-[220px]" : ""
+        isOpen ? "" : ""
       } min-h-[100vh] min-w-[90px] h-full py-4 pb-32 dark:bg-mainBackgroundDark flex flex-col justify-between items-center`}
     >
       <div className="flex flex-col gap-24 w-full items-center">
