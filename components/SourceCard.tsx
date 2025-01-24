@@ -30,7 +30,7 @@ export default function SourceCard({
   const favicons =
     variant === "multiple sources"
       ? images?.map(
-          (image, index) =>
+          (image) =>
             `https://www.google.com/s2/favicons?domain=${image}&sz=${128}`
         )
       : [];
@@ -43,7 +43,7 @@ export default function SourceCard({
   const avatars = (
     <div className="flex gap-1">
       {favicons?.map((favicon, index) => (
-        <Avatar className="w-[18px] h-[18px]">
+        <Avatar key={index} className="w-[18px] h-[18px]">
           <AvatarImage src={favicon} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>

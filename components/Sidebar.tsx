@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
@@ -44,9 +44,9 @@ export default function Sidebar() {
       variants={containerVariants}
       className={`${
         isOpen ? "" : ""
-      } min-h-[100vh] min-w-[90px] h-full py-4 pb-16 dark:bg-mainBackgroundDark flex flex-col justify-between items-center`}
+      } min-w-[90px] min-h-screen py-4 pb-16 dark:bg-mainBackgroundDark flex flex-col justify-between items-center`}
     >
-      <div className="flex flex-col gap-24 w-full items-center">
+      <div className="sticky top-4 flex flex-col gap-24 w-full items-center">
         <div
           className={`${
             isOpen
@@ -184,48 +184,43 @@ export default function Sidebar() {
           </div>
         </div>
       </div>
-      {/* <Button
-        variant={"ghost"}
-        className="dark:bg-offsetPlusDark dark:hover:bg-offsetPlusDark group rounded-full h-10 w-10 p-0"
-        onClick={() => setIsOpen(!isOpen)}
-      > */}
-
-      {!isOpen && (
-        <TooltipProvider delayDuration={150}>
-          <Tooltip>
-            <TooltipTrigger>
-              <div
-                className="flex items-center justify-center dark:bg-offsetPlusDark dark:hover:bg-offsetPlusDark group rounded-full h-10 w-10 cursor-pointer"
-                onClick={() => setIsOpen(!isOpen)}
-              >
-                <svg
-                  className="dark:text-textMainDark dark:stroke-textMainDark group-hover:dark:text-textOffDark transition-all duration-150 ease-out h-[22px] w-[22px] flex items-center justify-center"
-                  aria-hidden="true"
-                  focusable="false"
-                  data-prefix="far"
-                  data-icon="arrow-right-from-line"
-                  role="img"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 448 512"
+      <div className="sticky bottom-16">
+        {!isOpen && (
+          <TooltipProvider delayDuration={150}>
+            <Tooltip>
+              <TooltipTrigger>
+                <div
+                  className="flex items-center justify-center dark:bg-offsetPlusDark dark:hover:bg-offsetPlusDark group rounded-full h-10 w-10 cursor-pointer"
+                  onClick={() => setIsOpen(!isOpen)}
                 >
-                  <path
-                    fill="currentColor"
-                    d="M48 88c0-13.3-10.7-24-24-24S0 74.7 0 88L0 424c0 13.3 10.7 24 24 24s24-10.7 24-24L48 88zM440.4 273.5c4.8-4.5 7.6-10.9 7.6-17.5s-2.7-12.9-7.6-17.5l-136-128c-9.7-9.1-24.8-8.6-33.9 1s-8.6 24.8 1 33.9L363.5 232 280 232l-128 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l128 0 83.5 0-91.9 86.5c-9.7 9.1-10.1 24.3-1 33.9s24.3 10.1 33.9 1l136-128z"
-                  ></path>
-                </svg>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent
-              side="right"
-              sideOffset={6}
-              className="dark:bg-offsetPlusDark cursor-default px-2.5 py-1 rounded-sm"
-            >
-              <p className="text-xs text-[#E8E8E6]">Expand</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      )}
-      {/* </Button> */}
+                  <svg
+                    className="dark:text-textMainDark dark:stroke-textMainDark group-hover:dark:text-textOffDark transition-all duration-150 ease-out h-[22px] w-[22px] flex items-center justify-center"
+                    aria-hidden="true"
+                    focusable="false"
+                    data-prefix="far"
+                    data-icon="arrow-right-from-line"
+                    role="img"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 448 512"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M48 88c0-13.3-10.7-24-24-24S0 74.7 0 88L0 424c0 13.3 10.7 24 24 24s24-10.7 24-24L48 88zM440.4 273.5c4.8-4.5 7.6-10.9 7.6-17.5s-2.7-12.9-7.6-17.5l-136-128c-9.7-9.1-24.8-8.6-33.9 1s-8.6 24.8 1 33.9L363.5 232 280 232l-128 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l128 0 83.5 0-91.9 86.5c-9.7 9.1-10.1 24.3-1 33.9s24.3 10.1 33.9 1l136-128z"
+                    ></path>
+                  </svg>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent
+                side="right"
+                sideOffset={6}
+                className="dark:bg-offsetPlusDark cursor-default px-2.5 py-1 rounded-sm"
+              >
+                <p className="text-xs text-[#E8E8E6]">Expand</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
+      </div>
     </motion.nav>
   );
 }

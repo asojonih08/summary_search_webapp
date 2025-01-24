@@ -30,7 +30,7 @@ export default function SearchCardActions({
           <TooltipTrigger asChild>
             <Button
               variant={"ghost"}
-              className="rounded-3xl text-sm flex gap-1 items-center hover:text-textMainDark"
+              className="h-[32px] w-[78px] rounded-3xl text-sm flex gap-1 items-center dark:hover:text-textMainDark dark:hover:bg-offsetPlusDark"
             >
               <ListFilter />
               <span className="font-medium">Focus</span>
@@ -44,10 +44,10 @@ export default function SearchCardActions({
         </Tooltip>
       </TooltipProvider>
 
-      <div className="flex gap-3 items-center">
-        <div className="flex gap-2">
+      <div className="flex gap-4 items-center">
+        <div className="flex gap-2 items-center">
           <Switch className="dark:border-borderMain/40 border-[1.8px] data-[state=checked]:dark:bg-mainBackgroundDark data-[state=unchecked]:dark:bg-mainBackgroundDark"></Switch>
-          <span>Pro</span>
+          <span className="text-[14px]">Pro</span>
         </div>
         <Button
           onClick={() => handleSearchSubmit()}

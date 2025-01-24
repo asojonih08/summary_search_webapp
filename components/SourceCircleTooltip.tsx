@@ -10,8 +10,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 interface SourceCircleTooltipProps {
   sourceNumber: number;
   title: string;
-  image?: string;
-  images?: [string];
   displayLink: string;
   link: string;
   snippet: string;
@@ -20,13 +18,10 @@ interface SourceCircleTooltipProps {
 export default function SourceCircleTooltip({
   sourceNumber,
   title,
-  image,
-  images,
   displayLink,
   link,
   snippet,
 }: SourceCircleTooltipProps) {
-  const titleSplit = title.split(" ");
   const condesedDisplayLink = displayLink.split(".").at(-2);
   const faviconFromGoogle = `https://www.google.com/s2/favicons?domain=${displayLink}&sz=${128}`;
   const avatar = (
@@ -39,7 +34,7 @@ export default function SourceCircleTooltip({
     <TooltipProvider delayDuration={300}>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div className="inline-flex justify-center items-center h-[17.5px] w-[17.5px] mr-[0.1rem] -ml-[0.05rem] relative -top-[3px] pt-0.5 pr-[0.08rem] dark:bg-offsetPlusDark rounded-full text-center">
+          <div className="inline-flex justify-center items-center h-[17.5px] w-[17.5px] relative -top-[3px] mx-1 pt-0.5 pr-[0.08rem] dark:bg-offsetPlusDark rounded-full text-center">
             <span className="w-full h-full text-[10px] dark:text-textOffDark dark:hover:text-textMainDark cursor-pointer transition-colors duration-300">
               {sourceNumber}
             </span>

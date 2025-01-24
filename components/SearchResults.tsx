@@ -13,12 +13,13 @@ export default function SearchResults() {
   const searchParams = useSearchParams();
   const search_query = searchParams.get("q") || "";
   const { data: summary, isLoading } = useQuery({
-    queryKey: ["summary"],
+    queryKey: ["summary", search_query],
     queryFn: () => getSummary(search_query),
     enabled: !!search_query, // Fetch only when there's a query
   });
   console.log(summary?.answer);
   console.log(search_query);
+  console.log("isLoading in Search Results: ", isLoading);
 
   return (
     <div className="flex gap-7">

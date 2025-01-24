@@ -8,7 +8,39 @@ interface SourcesProps {
   isLoading: boolean;
 }
 
+interface Pagemap {
+  cse_thumbnail?: {
+    src: string;
+    width: string;
+    height: string;
+  }[];
+  metatags?: {
+    [key: string]: string | undefined; // Dynamic keys for metatags
+  }[];
+  cse_image?: {
+    src: string;
+  }[];
+  organization?: {
+    telephone: string;
+    url: string;
+  }[];
+}
+
+interface Item {
+  kind: string;
+  title: string;
+  htmlTitle: string;
+  link: string;
+  displayLink: string;
+  snippet: string;
+  htmlSnippet: string;
+  formattedUrl: string;
+  htmlFormattedUrl: string;
+  pagemap?: Pagemap; // Optional because it might not always exist
+}
+
 export default function Sources({ summary, isLoading }: SourcesProps) {
+  console.log("isLoading in Sources: ", isLoading);
   return (
     <div className="flex flex-col gap-3">
       <span className="flex items-center gap-2">
@@ -22,11 +54,15 @@ export default function Sources({ summary, isLoading }: SourcesProps) {
           ? JSON.parse(summary.search_results)
               .items.slice(0, 4)
               .map(
-                (source: any, index: number) =>
+                (source: Item, index: number) =>
                   source && (
                     <SourceCard
                       variant={index === 3 ? "multiple sources" : "regular"}
-                      key={index}
+                      key={
+                        Date.now() +
+                        "-" +
+                        Math.random().toString(36).substring(2, 9)
+                      }
                       title={source.title}
                       snippet={source.snippet}
                       displayLink={source.displayLink} // Use the actual source data
@@ -35,7 +71,7 @@ export default function Sources({ summary, isLoading }: SourcesProps) {
                         index === 3
                           ? JSON.parse(summary.search_results)
                               .items.slice(4, 9)
-                              .map((item: any) => {
+                              .map((item: Item) => {
                                 return item.displayLink ?? "";
                               })
                           : ""

@@ -1,11 +1,13 @@
+"use client";
 import SearchResults from "@/components/SearchResults";
-import React from "react";
+import React, { Suspense } from "react";
 
-export default function page({ params }: any) {
-  const search_query = params.q;
+export default function page() {
   return (
-    <div className="mx-12">
-      <SearchResults />
-    </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <div className="mx-12">
+        <SearchResults />
+      </div>
+    </Suspense>
   );
 }

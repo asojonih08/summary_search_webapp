@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Dispatch, RefObject, SetStateAction } from "react";
+import React, { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { Textarea } from "@/components/ui/textarea";
 
 interface SearchInputProps {
@@ -17,7 +17,9 @@ export default function SearchInput({
       autoComplete="false"
       placeholder={"Ask anything..."}
       onFocus={() => setInputFocused(true)}
-      onBlur={() => setInputFocused(false)}
+      onBlur={() => {
+        setTimeout(() => setInputFocused(false), 200);
+      }}
       value={searchInput}
       onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
         setSearchInput(e.target.value);
