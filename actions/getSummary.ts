@@ -8,6 +8,7 @@ export async function getSummary(
   }
 
   try {
+    //public facing
     const response = await fetch("http://192.168.86.35:8080", {
       method: "POST",
       headers: {
