@@ -8,7 +8,7 @@ export async function getSummary(
   }
 
   try {
-    const response = await fetch("http://192.168.86.35:5000/api", {
+    const response = await fetch("http://192.168.86.35:8080", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
