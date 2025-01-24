@@ -8,15 +8,18 @@ export async function getSummary(
   }
 
   try {
-    const response = await fetch("http://192.168.86.35:8080/api", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        search_query: query,
-      }),
-    });
+    const response = await fetch(
+      "https://cb85-104-173-126-218.ngrok-free.app/api",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          search_query: query,
+        }),
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Network response was not ok");
