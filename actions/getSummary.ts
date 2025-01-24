@@ -9,7 +9,7 @@ export async function getSummary(
 
   try {
     const response = await fetch(
-      "https://cb85-104-173-126-218.ngrok-free.app/api",
+      "https://cd10-104-173-126-218.ngrok-free.app/api",
       {
         method: "POST",
         headers: {
