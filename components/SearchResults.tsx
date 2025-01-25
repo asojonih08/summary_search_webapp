@@ -8,8 +8,11 @@ import SummaryActions from "./SummaryActions";
 import Related from "./Related";
 import { getSummary } from "@/actions/getSummary";
 import { useQuery } from "@tanstack/react-query";
+import { useSourcesOpen } from "./SourcesOpenContext";
+import AllSourcesList from "./AllSourcesList";
 
 export default function SearchResults() {
+  const { sourcesOpen } = useSourcesOpen();
   const searchParams = useSearchParams();
   const search_query = searchParams.get("q") || "";
   const { data: summary, isLoading } = useQuery({
@@ -22,7 +25,7 @@ export default function SearchResults() {
   console.log("isLoading in Search Results: ", isLoading);
 
   return (
-    <div className="flex gap-7">
+    <div className="flex gap-14">
       <div className="basis-[60%]">
         <h2 className="text-3xl dark:text-textMainDark mb-9">{search_query}</h2>
         <div className="flex flex-col gap-7">
@@ -32,6 +35,9 @@ export default function SearchResults() {
         <SummaryActions />
         <Separator className="w-full h-[0.2px] mt-9 mb-8 dark:bg-borderMain/50 " />
         <Related />
+      </div>
+      <div className="basis-[40%]">
+        {sourcesOpen && <AllSourcesList summary={summary} />}
       </div>
     </div>
   );

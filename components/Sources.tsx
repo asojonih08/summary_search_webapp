@@ -26,7 +26,7 @@ interface Pagemap {
   }[];
 }
 
-interface Item {
+export interface Item {
   kind: string;
   title: string;
   htmlTitle: string;
