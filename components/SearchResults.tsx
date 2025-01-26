@@ -10,6 +10,7 @@ import { getSummary } from "@/actions/getSummary";
 import { useQuery } from "@tanstack/react-query";
 import { useSourcesOpen } from "./SourcesOpenContext";
 import AllSourcesList from "./AllSourcesList";
+import SearchImages from "./SearchImages";
 
 export default function SearchResults() {
   const { sourcesOpen } = useSourcesOpen();
@@ -37,6 +38,9 @@ export default function SearchResults() {
         <Related />
       </div>
       <div className="basis-[40%]">
+        {!sourcesOpen && !isLoading && (
+          <SearchImages searchQuery={search_query} summary={summary} />
+        )}
         {sourcesOpen && <AllSourcesList summary={summary} />}
       </div>
     </div>

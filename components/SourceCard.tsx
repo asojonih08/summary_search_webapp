@@ -81,7 +81,7 @@ export default function SourceCard({
                 <p>
                   {titleSplit.length < 9
                     ? titleSplit.join(" ")
-                    : titleSplit.slice(0, 9).join(" ") + "..."}
+                    : titleSplit.slice(0, 7).join(" ") + "..."}
                 </p>
               )}
               {variant === "multiple sources" && (

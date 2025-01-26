@@ -17,7 +17,7 @@ interface Pagemap {
   metatags?: {
     [key: string]: string | undefined; // Dynamic keys for metatags
   }[];
-  cse_image?: {
+  cse_image: {
     src: string;
   }[];
   organization?: {
@@ -36,7 +36,7 @@ export interface Item {
   htmlSnippet: string;
   formattedUrl: string;
   htmlFormattedUrl: string;
-  pagemap?: Pagemap; // Optional because it might not always exist
+  pagemap: Pagemap; // Optional because it might not always exist
 }
 
 export default function Sources({ summary, isLoading }: SourcesProps) {
