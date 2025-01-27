@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSourcesOpen } from "./SourcesOpenContext";
 import AllSourcesList from "./AllSourcesList";
 import SearchImages from "./SearchImages";
+import SearchVideos from "./SearchVideos";
 
 export default function SearchResults() {
   const { sourcesOpen } = useSourcesOpen();
@@ -39,7 +40,10 @@ export default function SearchResults() {
       </div>
       <div className="basis-[40%]">
         {!sourcesOpen && !isLoading && (
-          <SearchImages searchQuery={search_query} summary={summary} />
+          <div className="flex flex-col gap-4">
+            <SearchImages searchQuery={search_query} summary={summary} />
+            <SearchVideos searchQuery={search_query} />
+          </div>
         )}
         {sourcesOpen && <AllSourcesList summary={summary} />}
       </div>

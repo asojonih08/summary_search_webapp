@@ -47,7 +47,7 @@ export default function SearchImages({
     }
   }, [summary]);
   const { data: images, isLoading } = useQuery({
-    queryKey: ["searchImages"], // Unique key
+    queryKey: ["searchImages", searchQuery], // Unique key
     queryFn: () => getSearchImages(searchImageLinks), // Fetch function
     enabled: searchImagesSelected && searchImageLinks.length > 0, // Run query only when enabled is true
   });
