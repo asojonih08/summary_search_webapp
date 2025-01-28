@@ -21,7 +21,7 @@ function constructSummaryWithReplacements(
       <Markdown
         key={`text-${index}`}
         components={{
-          p: ({ children }) => <span className="">{children}</span>, // Render <p> as <span>
+          p: ({ children }) => <span className="text-base">{children}</span>, // Render <p> as <span>
         }}
       >
         {processedTextArray[index]}

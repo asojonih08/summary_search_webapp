@@ -70,19 +70,19 @@ export default function SearchImages({
       {!searchImagesSelected && (
         <div
           onClick={() => setSearchImagesSelected(!searchImagesSelected)}
-          className="h-[41px] w-full dark:border-borderMain/50 bg-transparent border rounded-md px-4 py-2 flex justify-between items-center cursor-pointer dark:hover:bg-offsetDark transition-all duration-300"
+          className="h-[41px] w-full dark:border-borderMain/50 bg-transparent border rounded-md px-3.5 py-2 flex justify-between items-center cursor-pointer dark:hover:bg-offsetDark transition-all duration-300"
         >
-          <span className="flex items-center gap-2 dark:text-textMainDark font-medium">
+          <span className="flex items-center gap-2 dark:text-textMainDark font-medium text-sm">
             <FaRegImages /> Search Images
           </span>
           <FaPlus className="dark:text-superDark" />
         </div>
       )}
       {searchImagesSelected && !isLoading && (
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
           {images &&
             images.slice(0, 5).map((image, index) =>
-              index == 0 ? (
+              index == 0 && image ? (
                 <div
                   key={index}
                   onClick={() => {
@@ -152,7 +152,8 @@ export default function SearchImages({
                         <span className="flex gap-3">
                           <LogoIcon className="h-9 w-9" />{" "}
                           {searchQuery.split(" ").length > 9
-                            ? searchQuery.split(" ").slice(0, 10).join() + "..."
+                            ? searchQuery.split(" ").slice(0, 10).join(" ") +
+                              "..."
                             : searchQuery}
                         </span>
                         <div className="text-sm dark:border-borderMain/50 border rounded-3xl p-2 px-2.5 dark:hover:bg-[#202222] transition-all duration-300 ease-in-out cursor-pointer">
@@ -162,7 +163,7 @@ export default function SearchImages({
                             className="flex items-center justify-center gap-1"
                           >
                             {avatars[zoomedImageIndex]}{" "}
-                            {images[zoomedImageIndex].url.split("/")[2]}
+                            {images[zoomedImageIndex].url.split("/")[2] ?? ""}
                           </a>
                         </div>
                       </DialogTitle>

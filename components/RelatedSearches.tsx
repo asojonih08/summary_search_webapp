@@ -25,7 +25,7 @@ export default function RelatedSearches() {
       ))
     : suggestions?.map((suggestion, index) => (
         <div key={index}>
-          <Separator className="w-full h-[0.2px] mb-3 dark:bg-borderMain/50" />
+          <Separator className="w-full h-[0.2px] mb-3 dark:bg-borderMain/50 " />
           <Link
             href={`/search/new?q=${suggestion}`}
             className="dark:text-textMainDark font-medium flex justify-between items-center w-full group cursor-pointer"

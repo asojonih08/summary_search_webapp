@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSourcesOpen } from "./SourcesOpenContext";
+import { truncateStringPreserveWords } from "@/lib/utils";
 
 interface SourceCardProps {
   variant: string;
@@ -26,7 +27,6 @@ export default function SourceCard({
   snippet,
 }: SourceCardProps) {
   const { sourcesOpen, setSourcesOpen } = useSourcesOpen();
-  const titleSplit = title.split(" ");
   const condesedDisplayLink = displayLink.split(".").at(-2);
   const faviconFromGoogle = `https://www.google.com/s2/favicons?domain=${displayLink}&sz=${128}`;
   const favicons =
@@ -75,14 +75,10 @@ export default function SourceCard({
             <div
               className={`${
                 variant === "multiple sources" ? "justify-between" : ""
-              } dark:text-textMainDark text-left text-xs flex flex-col justify-between gap-1 h-full`}
+              } dark:text-textMainDark text-left text-xs flex flex-col justify-between gap-1 h-full line-clamp-3`}
             >
               {variant === "regular" && (
-                <p>
-                  {titleSplit.length < 9
-                    ? titleSplit.join(" ")
-                    : titleSplit.slice(0, 7).join(" ") + "..."}
-                </p>
+                <p>{truncateStringPreserveWords(title, 59)}</p>
               )}
               {variant === "multiple sources" && (
                 <span className="">{avatars}</span>

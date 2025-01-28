@@ -27,20 +27,20 @@ export default function SearchResults() {
   console.log("isLoading in Search Results: ", isLoading);
 
   return (
-    <div className="flex gap-14">
-      <div className="basis-[60%]">
-        <h2 className="text-3xl dark:text-textMainDark mb-9">{search_query}</h2>
+    <div className="grid-cols-12 md:grid gap-12 w-full max-w-[1100px] h-full flex justify-center">
+      <div className="col-span-8">
+        <h2 className="text-3xl dark:text-textMainDark my-8">{search_query}</h2>
         <div className="flex flex-col gap-7">
           <Sources summary={summary} isLoading={isLoading} />
           <Answer summary={summary} isLoading={isLoading} />
         </div>
         <SummaryActions />
-        <Separator className="w-full h-[0.2px] mt-9 mb-8 dark:bg-borderMain/50 " />
+        <Separator className="w-full h-[0.2px] mt-9 mb-8 dark:bg-borderMain/50" />
         <Related />
       </div>
-      <div className="basis-[40%]">
+      <div className="col-span-4 isolate">
         {!sourcesOpen && !isLoading && (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3 -mx-4 px-4 mt-8">
             <SearchImages searchQuery={search_query} summary={summary} />
             <SearchVideos searchQuery={search_query} />
           </div>

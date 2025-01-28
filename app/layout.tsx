@@ -66,7 +66,7 @@ export default function RootLayout({
                 <div className="flex h-full min-h-[100dvh]">
                   <Sidebar />
                   <div className="dark:bg-mainBackgroundDark w-full flex justify-center">
-                    <div className="dark:bg-contentBackgroundDark rounded-lg w-full mr-2.5 h-[98.5%] top-0 bottom-0 my-auto border border-gray-400/10 shadow-sm p-20 right-0 left-0">
+                    <div className="dark:bg-contentBackgroundDark rounded-lg w-full h-[98.5%] pb-52 top-0 bottom-0 border border-gray-400/10 shadow-sm right-0 left-0 my-auto mr-2.5">
                       {children}
                     </div>
                   </div>
