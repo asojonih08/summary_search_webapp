@@ -5,13 +5,13 @@ import { Button } from "./ui/button";
 import { useSourcesOpen } from "./SourcesOpenContext";
 import { IoClose } from "react-icons/io5";
 import SourceCardFull from "./SourceCardFull";
-import { Item } from "./Sources";
+import { SearchResult } from "@/actions/getSearchResults";
 
 interface AllSourcesListProps {
-  summary?: { [key: string]: string };
+  searchResults?: SearchResult[];
 }
 
-export default function AllSourcesList({ summary }: AllSourcesListProps) {
+export default function AllSourcesList({ searchResults }: AllSourcesListProps) {
   const { sourcesOpen, setSourcesOpen } = useSourcesOpen();
   return (
     <motion.div
@@ -24,12 +24,7 @@ export default function AllSourcesList({ summary }: AllSourcesListProps) {
         <span className="dark:text-textMainDark text-lg font-medium p-2 border-b border-borderMain/50 flex justify-between items-center pr-3">
           <div className="flex gap-1.5 items-center">
             <PiCirclesFourBold className="dark:text-textMainDark h-[18px] w-[18px] rotate-45 mb-0.5" />
-            <h2>
-              {summary && summary["search_results"]
-                ? JSON.parse(summary.search_results).items.length
-                : "-"}{" "}
-              sources
-            </h2>
+            <h2>{searchResults ? searchResults.length : "-"} sources</h2>
           </div>
           <Button
             onClick={() => setSourcesOpen(!sourcesOpen)}
@@ -40,25 +35,20 @@ export default function AllSourcesList({ summary }: AllSourcesListProps) {
           </Button>
         </span>
 
-        {summary && summary["search_results"] ? (
+        {searchResults ? (
           <div className="flex flex-col gap-2 px-2 pb-2 overflow-y-scroll ">
-            {JSON.parse(summary.search_results).items.map(
-              (source: Item, index: number) =>
-                source && (
-                  <SourceCardFull
-                    sourceNumber={index + 1}
-                    key={
-                      Date.now() +
-                      "-" +
-                      Math.random().toString(36).substring(2, 9)
-                    }
-                    title={source.title}
-                    snippet={source.snippet}
-                    displayLink={source.displayLink} // Use the actual source data
-                    link={source.link}
-                  />
-                )
-            )}
+            {searchResults.map((searchResult: SearchResult, index: number) => (
+              <SourceCardFull
+                sourceNumber={index + 1}
+                key={
+                  Date.now() + "-" + Math.random().toString(36).substring(2, 9)
+                }
+                title={searchResult.title}
+                snippet={searchResult.snippet}
+                displayLink={searchResult.displayLink} // Use the actual source data
+                link={searchResult.link}
+              />
+            ))}
           </div>
         ) : (
           ""

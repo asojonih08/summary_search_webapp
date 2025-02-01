@@ -1,116 +1,129 @@
-import React, { useMemo } from "react";
+"use client";
+
+import { useState, useEffect, useMemo, useTransition, Fragment } from "react";
 import AnswerSkeleton from "./AnswerSkeleton";
 import SourceCircleTooltip from "./SourceCircleTooltip";
 import LoadingLogoIcon from "./LoadingLogoIcon";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm"; // Enables GitHub-style Markdown (tables, lists, etc.)
+import { fetchChatStream } from "@/actions/fetchChatStream";
+import { SearchResult } from "@/actions/getSearchResults";
+import { useSearchParams } from "next/navigation";
 import Markdown from "react-markdown";
 
 interface AnswerProps {
-  summary?: { [key: string]: string };
-  isLoading: boolean;
+  searchResults?: SearchResult[];
+  isLoadingSearchResults: boolean;
 }
 
-function constructSummaryWithReplacements(
-  processedText: string,
-  sourcesDivsArray: React.ReactNode[]
-) {
-  const jsx: React.ReactNode[] = [];
-  const regex = /<span[^>]*>.*?<\/span>/g;
-  const processedTextArray = processedText.split(regex);
-  for (let index = 0; index < processedTextArray.length; index++) {
-    jsx.push(
-      <Markdown
-        key={`text-${index}`}
-        components={{
-          p: ({ children }) => <span className="text-base">{children}</span>, // Render <p> as <span>
-        }}
-      >
-        {processedTextArray[index]}
-      </Markdown>
-    );
-    jsx.push(sourcesDivsArray[index]);
-    index++;
-  }
-  return jsx;
-}
+export default function Answer({
+  searchResults,
+  isLoadingSearchResults,
+}: AnswerProps) {
+  const [answer, setAnswer] = useState(""); // state to accumulate streamed answer
+  const [isPending, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isStreaming, setIsStreaming] = useState(true);
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get("q") || "";
 
-export default function Answer({ summary, isLoading }: AnswerProps) {
+  const handleSubmit = async (query: string) => {
+    setAnswer(""); // Clear previous answer
+    searchResults &&
+      startTransition(async () => {
+        // Streaming the answer chunk by chunk
+        for await (const chunk of fetchChatStream(query, searchResults)) {
+          // Append each chunk of the answer as it is received
+          // console.log(chunk);
+          setAnswer((prev) => prev + chunk);
+          setIsLoading(false);
+        }
+        setIsStreaming(false);
+      });
+  };
+
+  useEffect(() => {
+    handleSubmit(searchQuery);
+  }, [searchQuery, searchResults]);
+
   const answerTitle = useMemo(
     () => (
       <h4 className="font-medium text-lg dark:text-textMainDark">Answer</h4>
     ),
     []
   );
-  const searchResults =
-    summary && summary["search_results"]
-      ? JSON.parse(summary.search_results)
-      : "";
-  const searchResultsItems = searchResults === "" ? [] : searchResults["items"];
 
-  // const text =
-  //   'According to the Household Pulse Survey conducted by the U.S. Census Bureau and analyzed by CDC\'s National Center for Health Statistics, nearly one in five American adults who have had COVID-19 (19%) are currently experiencing symptoms of "long COVID" [1]. This accounts for approximately 40% of all adults who reported having COVID-19, with 7.5% of the overall population suffering from long COVID symptoms [1]. Women are more likely to experience long COVID than men (9.4% vs. 5.5%), while older adults are less likely to have long COVID than younger adults [1]. Interestingly, research is also being conducted on individuals who have avoided COVID-19 altogether or showed no symptoms when infected, often referred to as "super-dodgers" or "Novids" [3]. Scientists believe that studying these individuals may hold the key to understanding how some people develop protective antibodies or genetic codes that prevent them from getting sick with COVID-19. According to Dr. Sabrina Assoumou of Boston University, it is likely a combination of factors, including vaccination, cautious behavior, socioeconomic status, and luck, that contributes to an individual\'s ability to avoid COVID-19 [3]. The study of these individuals has the potential to provide valuable insights into developing better vaccines or treatments for everyone. Dr. Assoumou notes that understanding why some people are able to avoid infection could lead to breakthroughs similar to those made in HIV research, where scientists discovered a genetic mutation that prevents the virus from entering cells [3]. This knowledge could potentially be used to create more effective prevention strategies and treatments for COVID-19. It is worth noting that despite some inconsistent reporting of symptoms, studies have demonstrated that at least 20% of individuals infected with SARS-CoV-2 will remain asymptomatic [3]. This highlights the importance of further research into understanding why some people are able to avoid infection or show no symptoms when infected.';
-  const regex =
-    /\(Source\s([1-9]|10)\)|\[([1-9]|10)\]|\(([1-9]|10)\)|\(\[([1-9]|10)\]\)/g;
-  const sourcesDivsArray: React.ReactNode[] = [];
-  // Process the text and replace matches with JSX
-  let processedText = "";
-  if (summary && summary["answer"])
-    processedText = (summary ? summary["answer"] : "").replace(
-      regex,
-      (match, group1, group2, group3) => {
-        // Extract the number from the capturing groups
-        const number = group1 || group2 || group3;
+  // Function to render citations with SourceCircleTooltip
+  const renderCitations = (text: string) => {
+    const regex = /\[(\d+)\]/g; // Matches [1], [2], etc.
+    const parts = text.split(regex);
 
-        sourcesDivsArray.push(
-          <SourceCircleTooltip
-            sourceNumber={number}
-            key={Math.random()}
-            title={
-              searchResultsItems.length > 0
-                ? searchResultsItems[number - 1].title
-                : ""
-            }
-            snippet={
-              searchResultsItems.length > 0
-                ? searchResultsItems[number - 1].snippet
-                : ""
-            }
-            displayLink={
-              searchResultsItems.length > 0
-                ? searchResultsItems[number - 1].displayLink
-                : ""
-            } // Use the actual source data
-            link={
-              searchResultsItems.length > 0
-                ? searchResultsItems[number - 1].link
-                : ""
-            }
-          />
-        );
-        return `<span></span>`;
+    // Create a React fragment where we manually insert the SourceCircleTooltip for each citation
+    return parts.map((part, index) => {
+      // console.log("part: ", part);
+      if (index % 2 === 1) {
+        // This means it's a citation number (e.g., "1", "2")
+        const num = parseInt(part, 10);
+        const source =
+          searchResults && searchResults[num - 1]
+            ? searchResults[num - 1]
+            : null;
+
+        if (source) {
+          // Return the SourceCircleTooltip component for citations
+          return (
+            <SourceCircleTooltip
+              key={`source-${Math.random() + index}`}
+              sourceNumber={num}
+              title={source.title}
+              snippet={source.snippet}
+              displayLink={source.displayLink}
+              link={source.link}
+            />
+          );
+        }
+        // If no source is found, return the citation number as normal text
+        return `[${num}]`;
       }
-    );
-  const jsxAnswer = constructSummaryWithReplacements(
-    processedText,
-    sourcesDivsArray
-  );
-  console.log(jsxAnswer);
+      // If not a citation, just return the plain text
+      if (!part.includes("###"))
+        part = part.replaceAll("\n\n\n\n\n", "\n&nbsp;");
+      // console.log(
+      //   "part<",
+      //   JSON.stringify(part),
+      //   ">; Contains newline: ",
+      //   part.includes("\n")
+      // );
+      return [
+        <Markdown
+          key={index}
+          remarkPlugins={[remarkGfm]}
+          components={{
+            p: ({ children }) => <span className="">{children}</span>,
+          }}
+        >
+          {part}
+        </Markdown>,
+      ];
+    });
+  };
 
   return (
     <div className="flex flex-col gap-3">
       <div className="flex gap-2 items-center">
-        {" "}
         <LoadingLogoIcon
-          className="h-5 w-5 dark:text-textMainDark"
-          isLoading={isLoading}
+          className="h-[22px] w-[22px] dark:text-textMainDark"
+          isLoading={isStreaming}
         />
         {answerTitle}
       </div>
-      <span className="dark:text-textMainDark text-justify ">
+      <span className="dark:text-textMainDark text-justify">
         {isLoading ? (
           <AnswerSkeleton />
         ) : (
-          <span className="justify-center items-center whitespace-pre-line">
-            {jsxAnswer.map((element: React.ReactNode) => element)}
+          <span className="text-pretty whitespace-pre-line">
+            {/* Render citations with React components inside the answer */}
+            {renderCitations(answer)}
           </span>
         )}
       </span>

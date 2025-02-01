@@ -12,7 +12,7 @@ import { truncateStringPreserveWords } from "@/lib/utils";
 interface SourceCardProps {
   variant: string;
   title: string;
-  images?: [string];
+  images?: string[];
   displayLink: string;
   link: string;
   snippet: string;
@@ -78,7 +78,7 @@ export default function SourceCard({
               } dark:text-textMainDark text-left text-xs flex flex-col justify-between gap-1 h-full line-clamp-3`}
             >
               {variant === "regular" && (
-                <p>{truncateStringPreserveWords(title, 59)}</p>
+                <p>{truncateStringPreserveWords(title, 54)}</p>
               )}
               {variant === "multiple sources" && (
                 <span className="">{avatars}</span>

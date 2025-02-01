@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { FaRegImages } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
-import { Item } from "./Sources";
 import Image from "next/image";
 import {
   Dialog,
@@ -21,37 +20,44 @@ import { IoClose } from "react-icons/io5";
 import { Separator } from "./ui/separator";
 import LogoIcon from "./LogoIcon";
 import { Skeleton } from "./ui/skeleton";
+import { SearchResult } from "@/actions/getSearchResults";
 
 interface SearchImagesProps {
   searchQuery: string;
-  summary?: { [key: string]: string };
+  searchResults?: SearchResult[];
 }
 
 export default function SearchImages({
   searchQuery,
-  summary,
+  searchResults,
 }: SearchImagesProps) {
   const [searchImagesSelected, setSearchImagesSelected] = useState(false);
-  const [searchImageLinks, setSearchImageLinks] = useState([]);
+  const [searchImageLinks, setSearchImageLinks] = useState<string[]>([]);
   const [showMoreImages, setShowMoreImages] = useState(false);
   const [zoomedImageIndex, setZoomedImageIndex] = useState(0);
   useEffect(() => {
-    if (summary && summary["search_results"]) {
-      console.log("Search Results: ", summary["search_results"]);
-      const parsedItems = summary
-        ? JSON.parse(summary["search_results"])
-            .items.filter((item: Item) => item.pagemap?.cse_image?.[0]?.src)
-            .map((item: Item) => item.pagemap.cse_image[0].src)
+    if (searchResults) {
+      const parsedItems = searchResults
+        ? searchResults
+            .filter(
+              (searchResult: SearchResult) =>
+                searchResult.pagemap?.cse_image?.[0]?.src
+            )
+            .map((searchResult: SearchResult) =>
+              searchResult.pagemap && searchResult.pagemap.cse_image
+                ? searchResult.pagemap.cse_image[0].src
+                : ""
+            )
         : [];
       setSearchImageLinks(parsedItems);
     }
-  }, [summary]);
+  }, [searchResults]);
   const { data: images, isLoading } = useQuery({
     queryKey: ["searchImages", searchQuery], // Unique key
     queryFn: () => getSearchImages(searchImageLinks), // Fetch function
     enabled: searchImagesSelected && searchImageLinks.length > 0, // Run query only when enabled is true
   });
-  console.log("Images: ", images);
+  // console.log("Images: ", images);
   const avatars =
     searchImageLinks.length > 0
       ? searchImageLinks.map((imageLink: string, index) => (
