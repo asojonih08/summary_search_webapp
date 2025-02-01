@@ -12,14 +12,24 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import { usePathname, useSearchParams } from "next/navigation";
 
 export default function SummaryActions() {
   const [copyPressed, setCopyPressed] = useState(false);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const search_query = searchParams.get("q") || "";
   function handleCopyTimeout() {
     setCopyPressed(false);
   }
   function handleCopyClick() {
     setCopyPressed(true);
+    navigator.clipboard.writeText(
+      "http://localhost:3000" +
+        pathname +
+        "?q=" +
+        search_query.split(" ").join("%20")
+    );
     setTimeout(handleCopyTimeout, 2000);
   }
   return (

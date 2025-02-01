@@ -46,6 +46,8 @@ export default function Answer({
     handleSubmit(searchQuery);
   }, [searchQuery, searchResults]);
 
+  useEffect(() => setIsLoading(true), [searchQuery]);
+
   const answerTitle = useMemo(
     () => (
       <h4 className="font-medium text-lg dark:text-textMainDark">Answer</h4>

@@ -12,14 +12,17 @@ export default function SearchCard() {
   const router = useRouter();
   const [inputFocused, setInputFocused] = useState<boolean>(false);
   const [searchInput, setSearchInput] = useState<string>("");
+  const [arrowEventTriggered, setArrowEventTriggered] = useState(false);
   const debouncedQuery = useDebounce(searchInput, 300); // Debounce for 300ms
   const { data: suggestions } = useQuery({
     queryKey: ["suggestions", debouncedQuery],
     queryFn: () => fetchSuggestions(debouncedQuery),
-    enabled: !!debouncedQuery, // Fetch only when there's a query
+    enabled: !!debouncedQuery && !arrowEventTriggered, // Fetch only when there's a query
   });
+  // console.log(suggestions);
   const handleClick = async (suggestion: string) => {
     console.log("Search query pressed: ", suggestion);
+    setSearchInput(suggestion);
     // Temporarily remove router.push to see if click event works
     router.push(`/search/new?q=${suggestion}`);
   };
@@ -36,6 +39,9 @@ export default function SearchCard() {
       >
         <div className="basis-[42%] px-4">
           <SearchInput
+            suggestions={suggestions}
+            arrowEventTriggered={arrowEventTriggered}
+            setArrowEventTriggered={setArrowEventTriggered}
             setInputFocused={setInputFocused}
             searchInput={searchInput}
             setSearchInput={setSearchInput}
@@ -50,18 +56,22 @@ export default function SearchCard() {
         suggestions &&
         suggestions.length > 0 && (
           <div
-            className={`dark:border-borderMain/75 ring-1 ring-borderMain dark:bg-mainBackgroundDark border-x-[1px] border-b-[1px] transition-colors duration-200 rounded-b-md shadow-sm w-[640px] h-auto flex flex-col px-2 pb-1.5`}
+            className={`dark:border-borderMain/75 ring-1 ring-borderMain dark:bg-mainBackgroundDark border-x-[1px] border-b-[1px] transition-colors duration-200 rounded-b-md shadow-sm w-[640px] h-auto flex flex-col  py-1.5`}
           >
             {suggestions.map((suggestion, index) => (
               <div
                 onClick={() => handleClick(suggestion)}
                 key={index}
-                className={`${
-                  index === 0 ? "pt-2.5" : "pt-[18px]"
-                } dark:text-textMainDark/90 text-[14px] font-medium cursor-pointer h-full  flex justify-between`}
+                className="hover:bg-offsetPlusDark w-full px-2 transition-all duration-200"
               >
-                <span>{suggestion}</span>
-                <ArrowUpLeft className="dark:text-textOffDark/90 h-4 w-4" />
+                <div
+                  className={`${
+                    index === 0 ? "pt-3 pb-2.5" : "pt-4 pb-2.5"
+                  } dark:text-textMainDark/90 text-[14px] font-medium cursor-pointer h-full  flex justify-between items-center`}
+                >
+                  <span>{suggestion}</span>
+                  <ArrowUpLeft className="dark:text-textOffDark/90 h-4 w-4" />
+                </div>
               </div>
             ))}
           </div>
