@@ -24,7 +24,7 @@ export default function SearchCardActions({
     router.push(`/search/new?q=${searchInput}`);
   }
   return (
-    <div className="flex justify-between items-center h-full dark:text-textOffDark">
+    <div className="flex justify-between items-center h-full dark:text-textOffDark z-50">
       <TooltipProvider delayDuration={300}>
         <Tooltip>
           <TooltipTrigger asChild>

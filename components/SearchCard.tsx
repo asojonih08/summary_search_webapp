@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SearchInput from "@/components/SearchInput";
 import SearchCardActions from "@/components/SearchCardActions";
 import { ArrowUpLeft } from "lucide-react";
@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 
 export default function SearchCard() {
   const router = useRouter();
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
+  const [displaySuggestions, setDisplaySuggestions] = useState<string[]>([]);
   const [inputFocused, setInputFocused] = useState<boolean>(false);
   const [searchInput, setSearchInput] = useState<string>("");
   const [arrowEventTriggered, setArrowEventTriggered] = useState(false);
@@ -19,6 +21,17 @@ export default function SearchCard() {
     queryFn: () => fetchSuggestions(debouncedQuery),
     enabled: !!debouncedQuery && !arrowEventTriggered, // Fetch only when there's a query
   });
+
+  useEffect(() => {
+    const newSuggestions = suggestions ? suggestions : [];
+
+    if (suggestions) setDisplaySuggestions(newSuggestions);
+  }, [suggestions]);
+
+  useEffect(() => {
+    if (searchInput.length === 0) setSelectedSuggestionIndex(-1);
+  }, [searchInput]);
+
   // console.log(suggestions);
   const handleClick = async (suggestion: string) => {
     console.log("Search query pressed: ", suggestion);
@@ -26,6 +39,7 @@ export default function SearchCard() {
     // Temporarily remove router.push to see if click event works
     router.push(`/search/new?q=${suggestion}`);
   };
+  // console.log("Arrow Event Triggered: ", arrowEventTriggered);
   return (
     <div className="h-full">
       <div
@@ -39,12 +53,14 @@ export default function SearchCard() {
       >
         <div className="basis-[42%] px-4">
           <SearchInput
-            suggestions={suggestions}
+            displaySuggestions={displaySuggestions}
             arrowEventTriggered={arrowEventTriggered}
             setArrowEventTriggered={setArrowEventTriggered}
             setInputFocused={setInputFocused}
             searchInput={searchInput}
             setSearchInput={setSearchInput}
+            selectedSuggestionIndex={selectedSuggestionIndex}
+            setSelectedSuggestionIndex={setSelectedSuggestionIndex}
           />
         </div>
         <div className="basis-[58%] w-full px-2">
@@ -53,16 +69,19 @@ export default function SearchCard() {
       </div>
       {searchInput.length > 0 &&
         inputFocused &&
-        suggestions &&
-        suggestions.length > 0 && (
+        displaySuggestions.length > 0 && (
           <div
             className={`dark:border-borderMain/75 ring-1 ring-borderMain dark:bg-mainBackgroundDark border-x-[1px] border-b-[1px] transition-colors duration-200 rounded-b-md shadow-sm w-[640px] h-auto flex flex-col  py-1.5`}
           >
-            {suggestions.map((suggestion, index) => (
+            {displaySuggestions.map((suggestion, index) => (
               <div
                 onClick={() => handleClick(suggestion)}
+                onMouseOver={() => setSelectedSuggestionIndex(index)}
+                onMouseLeave={() => setSelectedSuggestionIndex(-1)}
                 key={index}
-                className="hover:bg-offsetPlusDark w-full px-2 transition-all duration-200"
+                className={`${
+                  selectedSuggestionIndex === index ? "bg-offsetPlusDark" : ""
+                } w-full px-2 transition-all duration-200`}
               >
                 <div
                   className={`${

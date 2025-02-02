@@ -12,65 +12,74 @@ interface SearchInputProps {
   setInputFocused: Dispatch<SetStateAction<boolean>>;
   searchInput: string;
   setSearchInput: Dispatch<SetStateAction<string>>;
-  suggestions?: string[];
+  displaySuggestions: string[];
   arrowEventTriggered: boolean;
   setArrowEventTriggered: Dispatch<SetStateAction<boolean>>;
+  selectedSuggestionIndex: number;
+  setSelectedSuggestionIndex: Dispatch<SetStateAction<number>>;
 }
 
 export default function SearchInput({
   setInputFocused,
   searchInput,
   setSearchInput,
-  suggestions,
+  displaySuggestions,
   arrowEventTriggered,
   setArrowEventTriggered,
+  selectedSuggestionIndex,
+  setSelectedSuggestionIndex,
 }: SearchInputProps) {
   const router = useRouter();
 
-  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
-
-  useEffect(() => setSelectedSuggestionIndex(-1), [arrowEventTriggered]);
-
   function handleKeyEvent(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-    console.log("Handle Key Event", e.key);
-    // setArrowEventTriggered(false);
+    // console.log("Handle Key Event", e.key);
+    setArrowEventTriggered(false);
 
-    // if (e.key === "ArrowDown" && suggestions?.length) {
-    //   setArrowEventTriggered(true); // Stop API call
-    //   e.preventDefault();
-    //   console.log("Arrow Down");
-    //   const newIndex =
-    //     selectedSuggestionIndex === suggestions.length - 1
-    //       ? 0
-    //       : selectedSuggestionIndex + 1;
-    //   setSelectedSuggestionIndex(newIndex);
-    //   setSearchInput(suggestions[newIndex]);
-    // }
+    if (e.key === "ArrowDown") {
+      setArrowEventTriggered(true); // Stop API call
+      e.preventDefault();
+      // console.log("Arrow Down");
 
-    // if (e.key === "ArrowUp" && suggestions?.length) {
-    //   setArrowEventTriggered(true); // Stop API call
-    //   e.preventDefault();
-    //   console.log("Arrow Up");
-    //   if (selectedSuggestionIndex !== -1) {
-    //     const newIndex =
-    //       selectedSuggestionIndex === 0 ? 0 : selectedSuggestionIndex - 1;
-    //     setSelectedSuggestionIndex(newIndex);
-    //     setSearchInput(suggestions[newIndex]);
-    //   }
-    // }
+      selectedSuggestionIndex < 0
+        ? setSelectedSuggestionIndex(0)
+        : selectedSuggestionIndex === displaySuggestions.length - 1
+        ? setSelectedSuggestionIndex(0)
+        : setSelectedSuggestionIndex((oldIndex) => oldIndex + 1);
+    }
+
+    if (e.key === "ArrowUp") {
+      setArrowEventTriggered(true); // Stop API call
+      e.preventDefault();
+      // console.log("Arrow Up");
+      selectedSuggestionIndex > 0
+        ? setSelectedSuggestionIndex((oldIndex) => oldIndex - 1)
+        : selectedSuggestionIndex === 0
+        ? setSelectedSuggestionIndex(displaySuggestions.length - 1)
+        : setSelectedSuggestionIndex(-1);
+    }
 
     if (e.key === "Enter") {
       e.preventDefault();
-      router.push(`/search/new?q=${searchInput}`);
+      if (selectedSuggestionIndex !== -1)
+        setSearchInput(displaySuggestions[selectedSuggestionIndex]);
+      selectedSuggestionIndex === -1
+        ? router.push(`/search/new?q=${searchInput}`)
+        : router.push(
+            `/search/new?q=${displaySuggestions[selectedSuggestionIndex]}`
+          );
     }
   }
   return (
     <Textarea
+      onClick={() => setSelectedSuggestionIndex(-1)}
       autoComplete="false"
       placeholder={"Ask anything..."}
-      onFocus={() => setInputFocused(true)}
+      onFocus={() => {
+        setInputFocused(true);
+      }}
       onKeyDown={handleKeyEvent}
       onBlur={() => {
+        setSelectedSuggestionIndex(-1);
         setTimeout(() => {
           setInputFocused(false);
         }, 200);
