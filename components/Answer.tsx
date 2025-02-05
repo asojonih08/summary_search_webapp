@@ -62,7 +62,7 @@ export default function Answer({
 
     // Create a React fragment where we manually insert the SourceCircleTooltip for each citation
     return parts.map((part, index) => {
-      // console.log("part: ", part);
+      console.log("part: ", part);
       if (index % 2 === 1) {
         // This means it's a citation number (e.g., "1", "2")
         const num = parseInt(part, 10);
@@ -88,20 +88,25 @@ export default function Answer({
         return `[${num}]`;
       }
       // If not a citation, just return the plain text
-      if (!part.includes("###"))
-        part = part.replaceAll("\n\n\n\n\n", "\n&nbsp;");
-      // console.log(
-      //   "part<",
-      //   JSON.stringify(part),
-      //   ">; Contains newline: ",
-      //   part.includes("\n")
-      // );
+      if (!part.includes("###")) part = part.replaceAll("\n", "\n&nbsp;&nbsp;");
+
+      // if (part.match(/(\-\s)/g))
+      //   part = part.replace("- ", "\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• ");
+      // if (part.match(/(\d\.\s)/g)) {
+      //   const num = parseFloat(part);
+      //   part = part.replace(
+      //     /(\d\.\s)/g,
+      //     "&nbsp;&nbsp;&nbsp;&nbsp;" + part.match(/(\d\.\s)/g)
+      //   );
+      // }
+
       return [
         <Markdown
           key={index}
           remarkPlugins={[remarkGfm]}
           components={{
             p: ({ children }) => <span className="">{children}</span>,
+            li: ({ children }) => <li className="ml-8">{children}</li>,
           }}
         >
           {part}
@@ -127,6 +132,19 @@ export default function Answer({
             {/* Render citations with React components inside the answer */}
             {renderCitations(answer)}
           </span>
+          // <ReactMarkdown
+          //   components={{
+          //     p: ({ children }) => (
+          //       <span className="whitespace-pre-line">{children}</span>
+          //     ),
+          //     li: ({ children }) => (
+          //       <li className="list-disc ml-7">{children}</li>
+          //     ),
+          //   }}
+          //   remarkPlugins={[remarkGfm]}
+          // >
+          //   {answer.replaceAll("\n", "&nbsp; \n")}
+          // </ReactMarkdown>
         )}
       </span>
     </div>
