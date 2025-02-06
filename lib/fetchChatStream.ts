@@ -1,5 +1,4 @@
 "use server";
-import { SearchResult } from "./getSearchResults";
 import {
   LambdaClient,
   InvokeWithResponseStreamCommand,
@@ -22,8 +21,9 @@ function Decodeuint8arr(uint8array: Uint8Array) {
 
 export async function* fetchChatStream(
   searchQuery: string,
-  searchResultsItems: SearchResult[]
+  searchResultsItems: []
 ) {
+  console.log("fetchChatStream lib called");
   const input: InvokeWithResponseStreamCommandInput = {
     FunctionName: "summarizeHandler-fb03d7c",
     InvocationType: "RequestResponse" as const,
@@ -58,7 +58,7 @@ export async function* fetchChatStream(
         let decodedPayload;
         if (event.PayloadChunk.Payload) {
           decodedPayload = Decodeuint8arr(event.PayloadChunk.Payload);
-          // console.log("Decode Payload: ", decodedPayload);
+          //   console.log("Decode Payload: ", decodedPayload);
           yield decodedPayload;
         }
       }

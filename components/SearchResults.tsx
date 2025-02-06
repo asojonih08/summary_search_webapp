@@ -22,7 +22,7 @@ export default function SearchResults() {
     queryFn: () => getSearchResults(search_query),
     enabled: !!search_query, // Fetch only when there's a query
   });
-  console.log("Search Results:  ", SearchResults);
+  console.log("Search Results:  ", searchResults);
   console.log("Search Query:  ", search_query);
   console.log("isLoading in Search Results: ", isLoading);
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useTransition, Fragment } from "react";
+import { useState, useEffect, useMemo, useTransition } from "react";
 import AnswerSkeleton from "./AnswerSkeleton";
 import SourceCircleTooltip from "./SourceCircleTooltip";
 import LoadingLogoIcon from "./LoadingLogoIcon";
@@ -10,6 +10,7 @@ import { fetchChatStream } from "@/actions/fetchChatStream";
 import { SearchResult } from "@/actions/getSearchResults";
 import { useSearchParams } from "next/navigation";
 import Markdown from "react-markdown";
+import { readStreamableValue } from "ai/rsc";
 
 interface AnswerProps {
   searchResults?: SearchResult[];
@@ -27,23 +28,43 @@ export default function Answer({
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("q") || "";
 
-  const handleSubmit = async (query: string) => {
+  const handleSubmit = async () => {
     setAnswer(""); // Clear previous answer
-    searchResults &&
-      startTransition(async () => {
-        // Streaming the answer chunk by chunk
-        for await (const chunk of fetchChatStream(query, searchResults)) {
-          // Append each chunk of the answer as it is received
-          // console.log(chunk);
-          setAnswer((prev) => prev + chunk);
-          setIsLoading(false);
-        }
-        setIsStreaming(false);
+    setIsStreaming(true);
+
+    try {
+      const response = await fetch("/api", {
+        method: "POST", // Use POST to send data in the body
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          searchQuery,
+          searchResults, // Send the large data as part of the body
+        }),
       });
+
+      if (!response.body) throw new Error("No response body");
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder("utf-8");
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        setAnswer((prev) => prev + decoder.decode(value, { stream: true }));
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error("Error streaming response:", error);
+    } finally {
+      setIsStreaming(false);
+    }
   };
 
   useEffect(() => {
-    handleSubmit(searchQuery);
+    if (searchQuery && searchResults) handleSubmit();
   }, [searchQuery, searchResults]);
 
   useEffect(() => setIsLoading(true), [searchQuery]);
@@ -105,8 +126,7 @@ export default function Answer({
           key={index}
           remarkPlugins={[remarkGfm]}
           components={{
-            p: ({ children }) => <span className="">{children}</span>,
-            li: ({ children }) => <li className="ml-8">{children}</li>,
+            p: ({ children }) => <span>{children}</span>,
           }}
         >
           {part}
