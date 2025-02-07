@@ -11,9 +11,11 @@ export async function POST(req: NextRequest) {
 
   const stream = new ReadableStream({
     async start(controller) {
+      let result = "";
       try {
         for await (const chunk of fetchChatStream(searchQuery, searchResults)) {
           // console.log("chunk: ", chunk)
+          result += chunk;
           controller.enqueue(new TextEncoder().encode(chunk));
         }
       } catch (error) {
@@ -22,9 +24,9 @@ export async function POST(req: NextRequest) {
       } finally {
         controller.close();
       }
+      console.log("result: ", result);
     },
   });
-
   return new Response(stream, {
     headers: {
       "Content-Type": "text/plain; charset=utf-8",
