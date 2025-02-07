@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { fetchChatStream } from "@/lib/fetchChatStream"; // Adjust the path as needed
+export const maxDuratiion = 45; //max duration of function execution 45 seconds
 
 export async function POST(req: NextRequest) {
   console.log("Called api route");
