@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import AnswerSkeleton from "./AnswerSkeleton";
 import SourceCircleTooltip from "./SourceCircleTooltip";
 import LoadingLogoIcon from "./LoadingLogoIcon";
 import remarkGfm from "remark-gfm"; // Enables GitHub-style Markdown (tables, lists, etc.)
 import { SearchResult } from "@/actions/getSearchResults";
 import { useSearchParams } from "next/navigation";
 import Markdown from "react-markdown";
+import { useChat } from "ai/react";
 
 interface AnswerProps {
   searchResults?: SearchResult[];
@@ -19,9 +19,15 @@ export default function Answer({ searchResults }: AnswerProps) {
   const [isStreaming, setIsStreaming] = useState(true);
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("q") || "";
+  const { messages, handleSubmit } = useChat({
+    body: {
+      searchQuery,
+      searchResultsItems: searchResults,
+    },
+  });
 
   useEffect(() => {
-    const handleSubmit = async () => {
+    const handleSubmitOld = async () => {
       setAnswer(""); // Clear previous answer
       setIsStreaming(true);
 
@@ -55,7 +61,18 @@ export default function Answer({ searchResults }: AnswerProps) {
         setIsStreaming(false);
       }
     };
-    if (searchQuery && searchResults) handleSubmit();
+    const hSubmit = () =>
+      handleSubmit(new Event("submit") as Event, {
+        body: {
+          searchQuery,
+          searchResultsItems: searchResults,
+        },
+        allowEmptySubmit: true,
+      });
+    if (searchQuery && searchResults) {
+      handleSubmitOld();
+      hSubmit();
+    }
   }, [searchQuery, searchResults]);
 
   useEffect(() => setIsLoading(true), [searchQuery]);
@@ -74,7 +91,7 @@ export default function Answer({ searchResults }: AnswerProps) {
 
     // Create a React fragment where we manually insert the SourceCircleTooltip for each citation
     return parts.map((part, index) => {
-      console.log("part: ", part);
+      // console.log("part: ", part);
       if (index % 2 === 1) {
         // This means it's a citation number (e.g., "1", "2")
         const num = parseInt(part, 10);
@@ -136,13 +153,19 @@ export default function Answer({ searchResults }: AnswerProps) {
         {answerTitle}
       </div>
       <span className="dark:text-textMainDark text-justify">
-        {isLoading ? (
-          <AnswerSkeleton />
-        ) : (
-          <span className="text-pretty whitespace-pre-line">
-            {/* Render citations with React components inside the answer */}
-            {renderCitations(answer)}
-          </span>
+        {
+          <div className="flex gap-4">
+            <span className="text-pretty whitespace-pre-line">
+              {/* Render citations with React components inside the answer */}
+              {!isLoading && renderCitations(answer)}
+            </span>
+            {messages.map((m) => (
+              <div key={m.id} className="whitespace-pre-wrap text-textMainDark">
+                {m.role === "user" ? "User: " : "AI: "}
+                {m.content}
+              </div>
+            ))}
+          </div>
           // <ReactMarkdown
           //   components={{
           //     p: ({ children }) => (
@@ -156,7 +179,7 @@ export default function Answer({ searchResults }: AnswerProps) {
           // >
           //   {answer.replaceAll("\n", "&nbsp; \n")}
           // </ReactMarkdown>
-        )}
+        }
       </span>
     </div>
   );
