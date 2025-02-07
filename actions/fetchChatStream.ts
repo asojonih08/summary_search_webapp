@@ -5,7 +5,6 @@ import {
   InvokeWithResponseStreamCommand,
   InvokeWithResponseStreamCommandInput,
 } from "@aws-sdk/client-lambda";
-import { createStreamableValue } from "ai/rsc";
 
 // Initialize the Lambda client
 const lambda = new LambdaClient({
@@ -25,7 +24,7 @@ export async function* fetchChatStream(
   searchResultsItems: SearchResult[]
 ) {
   const input: InvokeWithResponseStreamCommandInput = {
-    FunctionName: "summarizeHandler-fb03d7c",
+    FunctionName: process.env.LAMBDA_FUNCTION_NAME,
     InvocationType: "RequestResponse" as const,
     LogType: "None",
     Payload: new TextEncoder().encode(
