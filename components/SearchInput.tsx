@@ -1,10 +1,4 @@
-import React, {
-  ChangeEvent,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import React, { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 
@@ -13,7 +7,6 @@ interface SearchInputProps {
   searchInput: string;
   setSearchInput: Dispatch<SetStateAction<string>>;
   displaySuggestions: string[];
-  arrowEventTriggered: boolean;
   setArrowEventTriggered: Dispatch<SetStateAction<boolean>>;
   selectedSuggestionIndex: number;
   setSelectedSuggestionIndex: Dispatch<SetStateAction<number>>;
@@ -24,7 +17,6 @@ export default function SearchInput({
   searchInput,
   setSearchInput,
   displaySuggestions,
-  arrowEventTriggered,
   setArrowEventTriggered,
   selectedSuggestionIndex,
   setSelectedSuggestionIndex,
@@ -40,33 +32,51 @@ export default function SearchInput({
       e.preventDefault();
       // console.log("Arrow Down");
 
-      selectedSuggestionIndex < 0
-        ? setSelectedSuggestionIndex(0)
-        : selectedSuggestionIndex === displaySuggestions.length - 1
-        ? setSelectedSuggestionIndex(0)
-        : setSelectedSuggestionIndex((oldIndex) => oldIndex + 1);
+      // selectedSuggestionIndex < 0
+      //   ? setSelectedSuggestionIndex(0)
+      //   : selectedSuggestionIndex === displaySuggestions.length - 1
+      //   ? setSelectedSuggestionIndex(0)
+      //   : setSelectedSuggestionIndex((oldIndex) => oldIndex + 1);
+
+      if (selectedSuggestionIndex < 0) {
+        setSelectedSuggestionIndex(0);
+      } else {
+        if (selectedSuggestionIndex === displaySuggestions.length - 1) {
+          setSelectedSuggestionIndex(0);
+        } else {
+          setSelectedSuggestionIndex((oldIndex) => oldIndex + 1);
+        }
+      }
     }
 
     if (e.key === "ArrowUp") {
       setArrowEventTriggered(true); // Stop API call
       e.preventDefault();
       // console.log("Arrow Up");
-      selectedSuggestionIndex > 0
-        ? setSelectedSuggestionIndex((oldIndex) => oldIndex - 1)
-        : selectedSuggestionIndex === 0
-        ? setSelectedSuggestionIndex(displaySuggestions.length - 1)
-        : setSelectedSuggestionIndex(-1);
+
+      if (selectedSuggestionIndex > 0) {
+        setSelectedSuggestionIndex((oldIndex) => oldIndex - 1);
+      } else {
+        if (selectedSuggestionIndex === 0) {
+          setSelectedSuggestionIndex(displaySuggestions.length - 1);
+        } else {
+          setSelectedSuggestionIndex(-1);
+        }
+      }
     }
 
     if (e.key === "Enter") {
       e.preventDefault();
       if (selectedSuggestionIndex !== -1)
         setSearchInput(displaySuggestions[selectedSuggestionIndex]);
-      selectedSuggestionIndex === -1
-        ? router.push(`/search/new?q=${searchInput}`)
-        : router.push(
-            `/search/new?q=${displaySuggestions[selectedSuggestionIndex]}`
-          );
+
+      if (selectedSuggestionIndex === -1) {
+        router.push(`/search/new?q=${searchInput}`);
+      } else {
+        router.push(
+          `/search/new?q=${displaySuggestions[selectedSuggestionIndex]}`
+        );
+      }
     }
   }
   return (

@@ -54,7 +54,6 @@ export default function SearchCard() {
         <div className="basis-[42%] px-4">
           <SearchInput
             displaySuggestions={displaySuggestions}
-            arrowEventTriggered={arrowEventTriggered}
             setArrowEventTriggered={setArrowEventTriggered}
             setInputFocused={setInputFocused}
             searchInput={searchInput}

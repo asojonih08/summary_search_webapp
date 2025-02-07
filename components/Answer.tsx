@@ -1,69 +1,60 @@
 "use client";
 
-import { useState, useEffect, useMemo, useTransition } from "react";
+import { useState, useEffect, useMemo } from "react";
 import AnswerSkeleton from "./AnswerSkeleton";
 import SourceCircleTooltip from "./SourceCircleTooltip";
 import LoadingLogoIcon from "./LoadingLogoIcon";
-import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm"; // Enables GitHub-style Markdown (tables, lists, etc.)
-import { fetchChatStream } from "@/actions/fetchChatStream";
 import { SearchResult } from "@/actions/getSearchResults";
 import { useSearchParams } from "next/navigation";
 import Markdown from "react-markdown";
-import { readStreamableValue } from "ai/rsc";
 
 interface AnswerProps {
   searchResults?: SearchResult[];
-  isLoadingSearchResults: boolean;
 }
 
-export default function Answer({
-  searchResults,
-  isLoadingSearchResults,
-}: AnswerProps) {
+export default function Answer({ searchResults }: AnswerProps) {
   const [answer, setAnswer] = useState(""); // state to accumulate streamed answer
-  const [isPending, startTransition] = useTransition();
   const [isLoading, setIsLoading] = useState(true);
   const [isStreaming, setIsStreaming] = useState(true);
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("q") || "";
 
-  const handleSubmit = async () => {
-    setAnswer(""); // Clear previous answer
-    setIsStreaming(true);
-
-    try {
-      const response = await fetch("/api", {
-        method: "POST", // Use POST to send data in the body
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          searchQuery,
-          searchResults, // Send the large data as part of the body
-        }),
-      });
-
-      if (!response.body) throw new Error("No response body");
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder("utf-8");
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        setAnswer((prev) => prev + decoder.decode(value, { stream: true }));
-        setIsLoading(false);
-      }
-    } catch (error) {
-      console.error("Error streaming response:", error);
-    } finally {
-      setIsStreaming(false);
-    }
-  };
-
   useEffect(() => {
+    const handleSubmit = async () => {
+      setAnswer(""); // Clear previous answer
+      setIsStreaming(true);
+
+      try {
+        const response = await fetch("/api", {
+          method: "POST", // Use POST to send data in the body
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            searchQuery,
+            searchResults, // Send the large data as part of the body
+          }),
+        });
+
+        if (!response.body) throw new Error("No response body");
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          setAnswer((prev) => prev + decoder.decode(value, { stream: true }));
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error("Error streaming response:", error);
+      } finally {
+        setIsStreaming(false);
+      }
+    };
     if (searchQuery && searchResults) handleSubmit();
   }, [searchQuery, searchResults]);
 

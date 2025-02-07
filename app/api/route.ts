@@ -13,6 +13,7 @@ export async function POST(req: NextRequest) {
     async start(controller) {
       try {
         for await (const chunk of fetchChatStream(searchQuery, searchResults)) {
+          // console.log("chunk: ", chunk)
           controller.enqueue(new TextEncoder().encode(chunk));
         }
       } catch (error) {

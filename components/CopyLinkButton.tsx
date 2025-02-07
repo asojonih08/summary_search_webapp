@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { FaCheck, FaLink } from "react-icons/fa6";
 import { Button } from "@/components/ui/button";

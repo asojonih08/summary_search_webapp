@@ -194,51 +194,68 @@ export default function SearchImages({
                         <a
                           href={images[zoomedImageIndex].url}
                           target={"_blank"}
-                          className="py-4 ml-6 h-full w-full relative flex justify-between items-center rounded-md overflow-hidden"
+                          className="py-4 ml-6 h-full max-h-[85vh] w-full relative flex justify-between items-center rounded-md overflow-hidden"
                         >
-                          <img
-                            alt={images[zoomedImageIndex].url}
-                            src={images[zoomedImageIndex].data ?? ""}
-                            className={`object-cover rounded-md overflow-hidden max-h-[85vh] w-full cursor-pointer`}
-                          ></img>
+                          <div className="relative w-full h-full rounded-md overflow-hidden">
+                            <Image
+                              alt={images[zoomedImageIndex].url}
+                              src={images[zoomedImageIndex].data ?? ""}
+                              fill
+                              objectFit="contain"
+                              sizes="(max-height: 85vh) 100vw"
+                              className={`cursor-pointer`}
+                            ></Image>
+                          </div>
                         </a>
                       </div>
-                      <div className="col-span-3 flex gap-2.5 overflow-y-scroll pt-1.5">
-                        <div className="flex flex-col gap-2.5 ml-1.5">
+                      <div className="col-span-3 flex gap-2.5 overflow-y-scroll pt-1.5 h-content">
+                        <div className="flex flex-col basis-1/2 gap-2.5 ml-1.5">
                           {images
                             .slice(0, images.length / 2)
                             .map((image, index) => (
-                              <img
-                                key={index}
-                                onClick={() => setZoomedImageIndex(index)}
-                                className={`${
-                                  zoomedImageIndex === index
-                                    ? "ring-2 ring-[#15808d]"
-                                    : "hover:opacity-65"
-                                } border-black border rounded-lg transition-all duration-300 ease-in-out cursor-pointer`}
-                                src={image.data}
-                              ></img>
+                              <div className="relative w-full" key={index}>
+                                <Image
+                                  alt={image.url}
+                                  width={0} // Set width and height to 0
+                                  height={0}
+                                  sizes="100vw" // Ensures responsiveness
+                                  style={{ width: "100%", height: "auto" }} // Allows aspect ratio to be preserved
+                                  onClick={() => setZoomedImageIndex(index)}
+                                  className={`${
+                                    zoomedImageIndex === index
+                                      ? "ring-2 ring-[#15808d]"
+                                      : "hover:opacity-65"
+                                  } border-black border rounded-lg transition-all duration-300 ease-in-out cursor-pointer`}
+                                  src={image.data ?? ""}
+                                ></Image>
+                              </div>
                             ))}
                         </div>
-                        <div className="flex flex-col gap-2.5 mr-1">
+                        <div className="flex flex-col basis-1/2 gap-2.5 mr-1">
                           {images
                             .slice(images.length / 2 + 1)
                             .map((image, index) => (
-                              <img
-                                key={index}
-                                onClick={() =>
-                                  setZoomedImageIndex(
+                              <div className="relative w-full" key={index}>
+                                <Image
+                                  alt={image.url}
+                                  width={0} // Set width and height to 0
+                                  height={0}
+                                  sizes="100vw" // Ensures responsiveness
+                                  style={{ width: "100%", height: "auto" }} // Allows aspect ratio to be preserved
+                                  onClick={() =>
+                                    setZoomedImageIndex(
+                                      index + images.length / 2 + 1
+                                    )
+                                  }
+                                  className={`${
+                                    zoomedImageIndex ===
                                     index + images.length / 2 + 1
-                                  )
-                                }
-                                className={`${
-                                  zoomedImageIndex ===
-                                  index + images.length / 2 + 1
-                                    ? "ring-2 ring-[#15808d]"
-                                    : "hover:opacity-65"
-                                } rounded-lg transition-all duration-300 ease-in-out cursor-pointer`}
-                                src={image.data}
-                              ></img>
+                                      ? "ring-2 ring-[#15808d]"
+                                      : "hover:opacity-65"
+                                  } rounded-lg transition-all duration-300 ease-in-out cursor-pointer`}
+                                  src={image.data ?? ""}
+                                ></Image>
+                              </div>
                             ))}
                         </div>
                       </div>

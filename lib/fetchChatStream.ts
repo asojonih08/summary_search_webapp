@@ -4,7 +4,6 @@ import {
   InvokeWithResponseStreamCommand,
   InvokeWithResponseStreamCommandInput,
 } from "@aws-sdk/client-lambda";
-import { createStreamableValue } from "ai/rsc";
 
 // Initialize the Lambda client
 const lambda = new LambdaClient({

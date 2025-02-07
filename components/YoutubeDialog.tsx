@@ -8,7 +8,7 @@ import {
   DialogOverlay,
   DialogTitle,
 } from "./ui/dialog";
-import { Button } from "./ui/button";
+
 import { IoClose } from "react-icons/io5";
 
 interface YoutubeDialogProps {
