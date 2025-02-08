@@ -26,7 +26,7 @@ export default function Answer({ searchResults }: AnswerProps) {
     },
   });
   const chat2 = useChat({
-    api: "http://localhost:3000/api/chatSpeed",
+    api: "/api/chatSpeed",
     body: {
       searchQuery,
       searchResultsItems: searchResults,
