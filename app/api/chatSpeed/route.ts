@@ -9,7 +9,6 @@ import {
   InvokeCommandInput,
   InvokeCommand,
 } from "@aws-sdk/client-lambda";
-console.log("Called Chat 2 Speed API");
 
 // Initialize the Lambda client
 const lambda = new LambdaClient({
