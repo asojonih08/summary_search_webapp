@@ -24,7 +24,7 @@ export async function* fetchChatStream(
 ) {
   console.log("fetchChatStream lib called");
   const input: InvokeWithResponseStreamCommandInput = {
-    FunctionName: process.env.LAMBDA_FUNCTION_NAME,
+    FunctionName: process.env.SUMMARIZE_LAMBDA_FUNCTION_NAME,
     InvocationType: "RequestResponse" as const,
     LogType: "None",
     Payload: new TextEncoder().encode(

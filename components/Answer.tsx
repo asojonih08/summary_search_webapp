@@ -19,7 +19,14 @@ export default function Answer({ searchResults }: AnswerProps) {
   const [isStreaming, setIsStreaming] = useState(true);
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("q") || "";
-  const { messages, handleSubmit } = useChat({
+  const chat1 = useChat({
+    body: {
+      searchQuery,
+      searchResultsItems: searchResults,
+    },
+  });
+  const chat2 = useChat({
+    api: "http://localhost:3000/api/chatSpeed",
     body: {
       searchQuery,
       searchResultsItems: searchResults,
@@ -61,18 +68,28 @@ export default function Answer({ searchResults }: AnswerProps) {
         setIsStreaming(false);
       }
     };
-    const hSubmit = () =>
-      handleSubmit(new Event("submit") as Event, {
+    const hSubmit = async () =>
+      chat1.handleSubmit(new Event("submit") as Event, {
         body: {
           searchQuery,
           searchResultsItems: searchResults,
         },
         allowEmptySubmit: true,
       });
-    if (searchQuery && searchResults) {
-      handleSubmitOld();
-      hSubmit();
-    }
+    const hSubmit2 = async () =>
+      chat2.handleSubmit(new Event("submit") as Event, {
+        body: {
+          searchQuery,
+          searchResultsItems: searchResults,
+        },
+        allowEmptySubmit: true,
+      });
+    const handleSubmits = async () => {
+      if (searchQuery && searchResults) {
+        await Promise.all([handleSubmitOld(), hSubmit(), hSubmit2()]);
+      }
+    };
+    handleSubmits();
   }, [searchQuery, searchResults]);
 
   useEffect(() => setIsLoading(true), [searchQuery]);
@@ -154,17 +171,40 @@ export default function Answer({ searchResults }: AnswerProps) {
       </div>
       <span className="dark:text-textMainDark text-justify">
         {
-          <div className="flex gap-4">
-            <span className="text-pretty whitespace-pre-line">
+          <div className="flex flex-col gap-3">
+            <span className="text-pretty whitespace-pre-line w-full">
+              <p className="dark:text-red-500 text-red-500 font-bold text-2xl">
+                Answer&nbsp;&nbsp;&nbsp;
+              </p>
               {/* Render citations with React components inside the answer */}
               {!isLoading && renderCitations(answer)}
             </span>
-            {messages.map((m) => (
-              <div key={m.id} className="whitespace-pre-wrap text-textMainDark">
-                {m.role === "user" ? "User: " : "AI: "}
-                {m.content}
-              </div>
-            ))}
+            <div className="w-full">
+              <span className="dark:text-red-500 font-bold">
+                1&nbsp;&nbsp;&nbsp;
+              </span>
+              {chat1.messages.map((m) => (
+                <div
+                  key={m.id}
+                  className="whitespace-pre-wrap text-textMainDark"
+                >
+                  {m.content}
+                </div>
+              ))}
+            </div>
+            <div className="w-full">
+              <span className="dark:text-red-500 font-bold text-2xl">
+                2&nbsp;&nbsp;&nbsp;
+              </span>
+              {chat2.messages.map((m) => (
+                <div
+                  key={m.id}
+                  className="whitespace-pre-wrap text-textMainDark text-2xl"
+                >
+                  {m.content}
+                </div>
+              ))}
+            </div>
           </div>
           // <ReactMarkdown
           //   components={{
