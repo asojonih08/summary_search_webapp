@@ -176,15 +176,15 @@ export default function Answer({ searchResults }: AnswerProps) {
       </div>
       <span className="dark:text-textMainDark text-justify">
         {
-          <div className="flex flex-col gap-3">
-            <span className="text-pretty whitespace-pre-line w-full">
+          <div className="flex gap-3">
+            <span className="text-pretty whitespace-pre-line w-full basis-1/3">
               <p className="dark:text-red-500 text-red-500 font-bold text-xl">
                 Answer&nbsp;&nbsp;&nbsp;
               </p>
               {/* Render citations with React components inside the answer */}
               {!isLoading && renderCitations(answer)}
             </span>
-            <div className="w-full">
+            <div className="w-full basis-1/3">
               <p className="dark:text-red-500 text-red-500 font-bold text-xl">
                 1&nbsp;&nbsp;&nbsp;
               </p>
@@ -197,7 +197,7 @@ export default function Answer({ searchResults }: AnswerProps) {
                 </div>
               ))}
             </div>
-            <div className="w-full">
+            <div className="w-full basis-1/3">
               <p className="dark:text-red-500 font-bold text-xl">
                 2&nbsp;&nbsp;&nbsp;
               </p>
