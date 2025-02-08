@@ -86,7 +86,12 @@ export default function Answer({ searchResults }: AnswerProps) {
       });
     const handleSubmits = async () => {
       if (searchQuery && searchResults) {
-        await Promise.all([handleSubmitOld(), hSubmit(), hSubmit2()]);
+        const [o, t, th] = await Promise.all([
+          handleSubmitOld(),
+          hSubmit(),
+          hSubmit2(),
+        ]);
+        console.log(o, t, th);
       }
     };
     handleSubmits();
@@ -173,16 +178,16 @@ export default function Answer({ searchResults }: AnswerProps) {
         {
           <div className="flex flex-col gap-3">
             <span className="text-pretty whitespace-pre-line w-full">
-              <p className="dark:text-red-500 text-red-500 font-bold text-2xl">
+              <p className="dark:text-red-500 text-red-500 font-bold text-xl">
                 Answer&nbsp;&nbsp;&nbsp;
               </p>
               {/* Render citations with React components inside the answer */}
               {!isLoading && renderCitations(answer)}
             </span>
             <div className="w-full">
-              <span className="dark:text-red-500 font-bold">
+              <p className="dark:text-red-500 text-red-500 font-bold text-xl">
                 1&nbsp;&nbsp;&nbsp;
-              </span>
+              </p>
               {chat1.messages.map((m) => (
                 <div
                   key={m.id}
@@ -193,13 +198,13 @@ export default function Answer({ searchResults }: AnswerProps) {
               ))}
             </div>
             <div className="w-full">
-              <span className="dark:text-red-500 font-bold text-2xl">
+              <p className="dark:text-red-500 font-bold text-xl">
                 2&nbsp;&nbsp;&nbsp;
-              </span>
+              </p>
               {chat2.messages.map((m) => (
                 <div
                   key={m.id}
-                  className="whitespace-pre-wrap text-textMainDark text-2xl"
+                  className="whitespace-pre-wrap text-textMainDark"
                 >
                   {m.content}
                 </div>
