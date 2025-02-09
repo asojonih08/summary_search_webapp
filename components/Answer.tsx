@@ -8,74 +8,77 @@ import { SearchResult } from "@/actions/getSearchResults";
 import { useSearchParams } from "next/navigation";
 import Markdown from "react-markdown";
 import { useChat } from "ai/react";
+import AnswerSkeleton from "./AnswerSkeleton";
+import { MemoizedMarkdown } from "./MemoizedMarkdown";
 
 interface AnswerProps {
   searchResults?: SearchResult[];
 }
 
 export default function Answer({ searchResults }: AnswerProps) {
-  const [answer, setAnswer] = useState(""); // state to accumulate streamed answer
-  const [isLoading, setIsLoading] = useState(true);
-  const [isStreaming, setIsStreaming] = useState(true);
+  // const [answer, setAnswer] = useState(""); // state to accumulate streamed answer
+  const [isStreaming, setIsStreaming] = useState(false);
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("q") || "";
-  const chat1 = useChat({
-    body: {
-      searchQuery,
-      searchResultsItems: searchResults,
-    },
-  });
+  // const chat1 = useChat({
+  //   body: {
+  //     searchQuery,
+  //     searchResultsItems: searchResults,
+  //   },
+  // });
   const chat2 = useChat({
     api: "/api/chatSpeed",
     body: {
       searchQuery,
       searchResultsItems: searchResults,
     },
+    onResponse: () => setIsStreaming(true),
+    experimental_throttle: 50,
   });
 
   useEffect(() => {
-    const handleSubmitOld = async () => {
-      setAnswer(""); // Clear previous answer
-      setIsStreaming(true);
+    // const handleSubmitOld = async () => {
+    //   setAnswer(""); // Clear previous answer
+    //   setIsStreaming(true);
 
-      try {
-        const response = await fetch("/api", {
-          method: "POST", // Use POST to send data in the body
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            searchQuery,
-            searchResults, // Send the large data as part of the body
-          }),
-        });
+    // try {
+    //     const response = await fetch("/api", {
+    //       method: "POST", // Use POST to send data in the body
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify({
+    //         searchQuery,
+    //         searchResults, // Send the large data as part of the body
+    //       }),
+    //     });
 
-        if (!response.body) throw new Error("No response body");
+    //     if (!response.body) throw new Error("No response body");
 
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder("utf-8");
+    //     const reader = response.body.getReader();
+    //     const decoder = new TextDecoder("utf-8");
 
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
+    //     while (true) {
+    //       const { done, value } = await reader.read();
+    //       if (done) break;
 
-          setAnswer((prev) => prev + decoder.decode(value, { stream: true }));
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.error("Error streaming response:", error);
-      } finally {
-        setIsStreaming(false);
-      }
-    };
-    const hSubmit = async () =>
-      chat1.handleSubmit(new Event("submit") as Event, {
-        body: {
-          searchQuery,
-          searchResultsItems: searchResults,
-        },
-        allowEmptySubmit: true,
-      });
+    //       setAnswer((prev) => prev + decoder.decode(value, { stream: true }));
+    //       setIsLoading(false);
+    //     }
+    //   } catch (error) {
+    //     console.error("Error streaming response:", error);
+    //   } finally {
+    //     setIsStreaming(false);
+    //   }
+    // };
+    // const hSubmit = async () =>
+    //   chat1.handleSubmit(new Event("submit") as Event, {
+    //     body: {
+    //       searchQuery,
+    //       searchResultsItems: searchResults,
+    //     },
+    //     allowEmptySubmit: true,
+    //   });
     const hSubmit2 = async () =>
       chat2.handleSubmit(new Event("submit") as Event, {
         body: {
@@ -86,18 +89,20 @@ export default function Answer({ searchResults }: AnswerProps) {
       });
     const handleSubmits = async () => {
       if (searchQuery && searchResults) {
-        const [o, t, th] = await Promise.all([
-          handleSubmitOld(),
-          hSubmit(),
-          hSubmit2(),
-        ]);
-        console.log(o, t, th);
+        // const [o, t, th] = await Promise.all([
+        //   handleSubmitOld(),
+        //   hSubmit(),
+        //   hSubmit2(),
+        // ]);
+        // console.log(o, t, th);
+        hSubmit2();
+        setIsStreaming(false);
       }
     };
     handleSubmits();
   }, [searchQuery, searchResults]);
 
-  useEffect(() => setIsLoading(true), [searchQuery]);
+  // useEffect(() => setIsLoading(true), [searchQuery]);
 
   const answerTitle = useMemo(
     () => (
@@ -170,21 +175,22 @@ export default function Answer({ searchResults }: AnswerProps) {
       <div className="flex gap-2 items-center">
         <LoadingLogoIcon
           className="h-[22px] w-[22px] dark:text-textMainDark"
-          isLoading={isStreaming}
+          isLoading={chat2.isLoading}
         />
         {answerTitle}
       </div>
       <span className="dark:text-textMainDark text-justify">
-        {
-          <div className="flex gap-3">
+        <div className="flex gap-3">
+          {false && (
             <span className="text-pretty whitespace-pre-line w-full basis-1/3">
               <p className="dark:text-red-500 text-red-500 font-bold text-xl">
                 Answer&nbsp;&nbsp;&nbsp;
               </p>
               {/* Render citations with React components inside the answer */}
-              {!isLoading && renderCitations(answer)}
+              {!chat2.isLoading && renderCitations("answer")}
             </span>
-            <div className="w-full basis-1/3">
+          )}
+          {/* <div className="w-full basis-1/3">
               <p className="dark:text-red-500 text-red-500 font-bold text-xl">
                 1&nbsp;&nbsp;&nbsp;
               </p>
@@ -196,35 +202,23 @@ export default function Answer({ searchResults }: AnswerProps) {
                   {m.content}
                 </div>
               ))}
-            </div>
-            <div className="w-full basis-1/3">
-              <p className="dark:text-red-500 font-bold text-xl">
-                2&nbsp;&nbsp;&nbsp;
-              </p>
+            </div> */}
+          {!isStreaming ? (
+            <AnswerSkeleton />
+          ) : (
+            <div className="w-full">
               {chat2.messages.map((m) => (
-                <div
-                  key={m.id}
-                  className="whitespace-pre-wrap text-textMainDark"
-                >
-                  {m.content}
+                <div key={m.id} className=" text-textMainDark">
+                  <MemoizedMarkdown
+                    id={m.id}
+                    content={m.content}
+                    searchResults={searchResults ?? []}
+                  />
                 </div>
               ))}
             </div>
-          </div>
-          // <ReactMarkdown
-          //   components={{
-          //     p: ({ children }) => (
-          //       <span className="whitespace-pre-line">{children}</span>
-          //     ),
-          //     li: ({ children }) => (
-          //       <li className="list-disc ml-7">{children}</li>
-          //     ),
-          //   }}
-          //   remarkPlugins={[remarkGfm]}
-          // >
-          //   {answer.replaceAll("\n", "&nbsp; \n")}
-          // </ReactMarkdown>
-        }
+          )}
+        </div>
       </span>
     </div>
   );

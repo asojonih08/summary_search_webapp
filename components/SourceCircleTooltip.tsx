@@ -35,7 +35,7 @@ export default function SourceCircleTooltip({
       <TooltipProvider delayDuration={300}>
         <Tooltip>
           <TooltipTrigger asChild>
-            <span className="inline-flex justify-center items-center h-[17.5px] w-[17.5px] relative -top-[3px] mx-1 pt-0.5 pr-[0.08rem] dark:bg-offsetPlusDark rounded-full text-center">
+            <span className="inline-flex justify-center items-center h-[17.5px] w-[17.5px] relative -top-[3px] mx-0.5 pt-0.5 pr-[0.08rem] dark:bg-offsetPlusDark rounded-full text-center">
               <span className="w-full h-full text-[10px] dark:text-textOffDark dark:hover:text-textMainDark cursor-pointer transition-colors duration-300">
                 {sourceNumber}
               </span>
@@ -45,18 +45,18 @@ export default function SourceCircleTooltip({
             side="bottom"
             className="dark:bg-contentBackgroundDark dark:border-borderMain/50 shadow-lg rounded-lg  py-[14px] px-4 w-80 h-auto flex flex-col gap-1.5 text-left"
           >
-            <div className="flex gap-1 items-center">
+            <span className="flex gap-1 items-center">
               {avatar}
               <span className="dark:text-textOffDark">
                 {condesedDisplayLink}
               </span>
-            </div>
+            </span>
             <a href={link} target={"_blank"}>
-              <h3 className="text-sm font-medium h-full dark:hover:text-superDark transition-colors duration-150">
+              <span className="text-sm font-medium dark:text-textMainDark h-full dark:hover:text-superDark transition-colors duration-150">
                 {title}
-              </h3>
+              </span>
             </a>
-            <p className="text-sm h-full">{snippet}</p>
+            <span className="text-sm h-full">{snippet}</span>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
