@@ -35,7 +35,7 @@ export default function SourceCircleTooltip({
       <Tooltip>
         <TooltipTrigger asChild>
           <span className="inline-flex justify-center items-center h-[17.5px] w-[17.5px] relative -top-[3px] mx-0.5 pt-0.5 pr-[0.08rem] dark:bg-offsetPlusDark rounded-full text-center">
-            <span className="w-full h-full text-[10px] dark:text-textOffDark dark:hover:text-rose-100 cursor-pointer transition-colors duration-300">
+            <span className="w-full h-full text-[10px] dark:text-textOffDark dark:hover:text-superDark/60 dark:hover:font-semibold cursor-pointer transition-colors duration-300">
               {sourceNumber}
             </span>
           </span>
