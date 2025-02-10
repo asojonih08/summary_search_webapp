@@ -3,7 +3,7 @@ import { getSearchImages } from "@/actions/getSearchImages";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { FaRegImages } from "react-icons/fa";
-import { FaPlus } from "react-icons/fa6";
+// import { FaPlus } from "react-icons/fa6";
 import Image from "next/image";
 import {
   Dialog,
@@ -31,7 +31,7 @@ export default function SearchImages({
   searchQuery,
   searchResults,
 }: SearchImagesProps) {
-  const [searchImagesSelected, setSearchImagesSelected] = useState(false);
+  // const [searchImagesSelected, setSearchImagesSelected] = useState(true);
   const [searchImageLinks, setSearchImageLinks] = useState<string[]>([]);
   const [showMoreImages, setShowMoreImages] = useState(false);
   const [zoomedImageIndex, setZoomedImageIndex] = useState(0);
@@ -55,7 +55,7 @@ export default function SearchImages({
   const { data: images, isLoading } = useQuery({
     queryKey: ["searchImages", searchQuery], // Unique key
     queryFn: () => getSearchImages(searchImageLinks), // Fetch function
-    enabled: searchImagesSelected && searchImageLinks.length > 0, // Run query only when enabled is true
+    enabled: searchImageLinks.length > 0, // Run query only when enabled is true
   });
   // console.log("Images: ", images);
   const avatars =
@@ -73,7 +73,7 @@ export default function SearchImages({
       : [];
   return (
     <div className="w-full h-auto">
-      {!searchImagesSelected && (
+      {/* {!searchImagesSelected && (
         <div
           onClick={() => setSearchImagesSelected(!searchImagesSelected)}
           className="h-[41px] w-full dark:border-borderMain/50 bg-transparent border rounded-md px-3.5 py-2 flex justify-between items-center cursor-pointer dark:hover:bg-offsetDark transition-all duration-300"
@@ -83,8 +83,9 @@ export default function SearchImages({
           </span>
           <FaPlus className="dark:text-superDark" />
         </div>
-      )}
-      {searchImagesSelected && !isLoading && (
+      )} */}
+
+      {!isLoading && (
         <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
           {images &&
             images.slice(0, 5).map((image, index) =>
