@@ -27,7 +27,7 @@ export default function Answer({ searchResults }: AnswerProps) {
   //   },
   // });
   const chat2 = useChat({
-    api: "/api/chatSpeed",
+    api: "/api/summarize",
     body: {
       searchQuery,
       searchResultsItems: searchResults,
@@ -209,11 +209,13 @@ export default function Answer({ searchResults }: AnswerProps) {
             <div className="w-full">
               {chat2.messages.map((m) => (
                 <div key={m.id} className=" text-textMainDark">
-                  <MemoizedMarkdown
-                    id={m.id}
-                    content={m.content}
-                    searchResults={searchResults ?? []}
-                  />
+                  <div className="inline text-pretty break-words leading-normal prose prose-table:mb-16 prose-p:dark:text-textMainDark prose-strong:dark:text-textMainDark prose-strong:underline prose-strong:underline-offset-2 prose-strong:decoration-textOffDark prose-li:list-outside prose-ol:space-y-6 prose-ol:my-4 dark:text-textMainDark">
+                    <MemoizedMarkdown
+                      id={m.id}
+                      content={m.content}
+                      searchResults={searchResults ?? []}
+                    />
+                  </div>
                 </div>
               ))}
             </div>

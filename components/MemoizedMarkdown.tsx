@@ -65,7 +65,7 @@ const MemoizedMarkdownBlock = memo(
               : [children];
 
             return (
-              <span className="whitespace-pre-line">
+              <span className="whitespace-pre-wrap">
                 {content.map((child) => {
                   if (typeof child === "string") {
                     const parts = child.split(/(CITATION_\d+)/g);
@@ -250,12 +250,11 @@ export const MemoizedMarkdown = memo(
     const blocks = useMemo(() => parseMarkdownIntoBlocks(content), [content]);
 
     return blocks.map((block, index) => (
-      <div
+      <MemoizedMarkdownBlock
         key={`${id}-block_${index}`}
-        className="inline text-pretty break-words leading-normal prose prose-p:dark:text-textMainDark prose-strong:dark:text-textMainDark prose-strong:underline prose-strong:underline-offset-2 prose-strong:decoration-textOffDark prose-li:list-outside prose-ol:space-y-6 prose-ol:my-4 dark:text-textMainDark"
-      >
-        <MemoizedMarkdownBlock content={block} searchResults={searchResults} />
-      </div>
+        content={block}
+        searchResults={searchResults}
+      />
     ));
   }
 );
