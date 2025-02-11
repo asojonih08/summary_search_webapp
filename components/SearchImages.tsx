@@ -131,21 +131,25 @@ export default function SearchImages({
                     <div className="overflow-hidden dark:bg-offsetDark/55 dark:hover:bg-offsetPlusDark/80 rounded-md h-[86px] hover:scale-[102%] transition-all duration-300 ease-in-out flex items-center cursor-pointer">
                       <div className="flex flex-col w-full gap-[13px]  justify-center p-2 pt-2.5">
                         <div className="flex gap-1 h-10  w-full justify-center">
-                          {images.slice(4, 7).map((image, index) => (
-                            <div
-                              key={index}
-                              className="h-[44px] w-[44px] relative"
-                            >
-                              <Image
-                                className="rounded-sm"
-                                key={index}
-                                alt={image.url}
-                                src={image.data ?? ""}
-                                fill
-                                objectFit="cover"
-                              />
-                            </div>
-                          ))}
+                          {images.slice(4, 7).map(
+                            (image, index) =>
+                              image.data &&
+                              image.url && (
+                                <div
+                                  key={index}
+                                  className="h-[44px] w-[44px] relative"
+                                >
+                                  <Image
+                                    className="rounded-sm"
+                                    key={index}
+                                    alt={image.url}
+                                    src={image.data ?? ""}
+                                    fill
+                                    objectFit="cover"
+                                  />
+                                </div>
+                              )
+                          )}
                         </div>
                         <span className="dark:text-textOffDark font-medium text-xs flex items-center gap-1">
                           <FaRegImages /> View More
@@ -211,26 +215,27 @@ export default function SearchImages({
                       </div>
                       <div className="col-span-3 flex gap-2.5 overflow-y-scroll pt-1.5 h-content">
                         <div className="flex flex-col basis-1/2 gap-2.5 ml-1.5">
-                          {images
-                            .slice(0, images.length / 2)
-                            .map((image, index) => (
-                              <div className="relative w-full" key={index}>
-                                <Image
-                                  alt={image.url}
-                                  width={0} // Set width and height to 0
-                                  height={0}
-                                  sizes="100vw" // Ensures responsiveness
-                                  style={{ width: "100%", height: "auto" }} // Allows aspect ratio to be preserved
-                                  onClick={() => setZoomedImageIndex(index)}
-                                  className={`${
-                                    zoomedImageIndex === index
-                                      ? "ring-2 ring-[#15808d]"
-                                      : "hover:opacity-65"
-                                  } border-black border rounded-lg transition-all duration-300 ease-in-out cursor-pointer`}
-                                  src={image.data ?? ""}
-                                ></Image>
-                              </div>
-                            ))}
+                          {images.slice(0, images.length / 2).map(
+                            (image, index) =>
+                              image.data && (
+                                <div className="relative w-full" key={index}>
+                                  <Image
+                                    alt={image.url}
+                                    width={0} // Set width and height to 0
+                                    height={0}
+                                    sizes="100vw" // Ensures responsiveness
+                                    style={{ width: "100%", height: "auto" }} // Allows aspect ratio to be preserved
+                                    onClick={() => setZoomedImageIndex(index)}
+                                    className={`${
+                                      zoomedImageIndex === index
+                                        ? "ring-2 ring-[#15808d]"
+                                        : "hover:opacity-65"
+                                    } border-black border rounded-lg transition-all duration-300 ease-in-out cursor-pointer`}
+                                    src={image.data ?? ""}
+                                  ></Image>
+                                </div>
+                              )
+                          )}
                         </div>
                         <div className="flex flex-col basis-1/2 gap-2.5 mr-1">
                           {images

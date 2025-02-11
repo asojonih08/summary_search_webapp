@@ -26,16 +26,18 @@ export default function Answer({ searchResults }: AnswerProps) {
       searchQuery,
       searchResultsItems: searchResults,
     },
-  });
-  const chat2 = useChat({
-    api: "/api/summarize",
-    body: {
-      searchQuery,
-      searchResultsItems: searchResults,
-    },
     onResponse: () => setIsStreaming(true),
     experimental_throttle: 50,
   });
+  // const chat2 = useChat({
+  //   api: "/api/summarize",
+  //   body: {
+  //     searchQuery,
+  //     searchResultsItems: searchResults,
+  //   },
+  //   onResponse: () => setIsStreaming(true),
+  //   experimental_throttle: 50,
+  // });
 
   useEffect(() => {
     // const handleSubmitOld = async () => {
@@ -80,18 +82,19 @@ export default function Answer({ searchResults }: AnswerProps) {
         },
         allowEmptySubmit: true,
       });
-    const hSubmit2 = async () =>
-      chat2.handleSubmit(new Event("submit") as Event, {
-        body: {
-          searchQuery,
-          searchResultsItems: searchResults,
-        },
-        allowEmptySubmit: true,
-      });
+    // const hSubmit2 = async () =>
+    //   chat2.handleSubmit(new Event("submit") as Event, {
+    //     body: {
+    //       searchQuery,
+    //       searchResultsItems: searchResults,
+    //     },
+    //     allowEmptySubmit: true,
+    //   });
     const handleSubmits = async () => {
       if (searchQuery && searchResults) {
-        const [o, t] = await Promise.all([hSubmit2(), hSubmit()]);
-        console.log(o, t);
+        // const [o, t] = await Promise.all([hSubmit2(), hSubmit()]);
+        // console.log(o, t);
+        hSubmit();
 
         setIsStreaming(false);
       }
@@ -172,7 +175,7 @@ export default function Answer({ searchResults }: AnswerProps) {
       <div className="flex gap-2 items-center">
         <LoadingLogoIcon
           className="h-[22px] w-[22px] dark:text-textMainDark"
-          isLoading={chat2.isLoading}
+          isLoading={chatFast.isLoading}
         />
         {answerTitle}
       </div>
@@ -184,7 +187,7 @@ export default function Answer({ searchResults }: AnswerProps) {
                 Answer&nbsp;&nbsp;&nbsp;
               </p>
               {/* Render citations with React components inside the answer */}
-              {!chat2.isLoading && renderCitations("answer")}
+              {!chatFast.isLoading && renderCitations("answer")}
             </span>
           )}
           {/* <div className="w-full basis-1/3">
@@ -203,8 +206,8 @@ export default function Answer({ searchResults }: AnswerProps) {
           {!isStreaming ? (
             <AnswerSkeleton />
           ) : (
-            <div className="w-full basis-1/2">
-              {chat2.messages.map((m) => (
+            <div className="w-full">
+              {chatFast.messages.map((m) => (
                 <div key={m.id} className=" text-textMainDark">
                   <div className="inline text-pretty break-words leading-normal prose dark:prose-invert prose-h1:text-xl prose-h2:text-lg prose-h3:text-[17px] prose-h4:text-[16.5px] prose-table:mb-12 prose-p:dark:text-textMainDark prose-strong:dark:text-textMainDark prose-strong:underline prose-strong:underline-offset-2 prose-strong:decoration-textOffDark prose-li:list-outside prose-ol:space-y-6 prose-ol:my-4 dark:text-textMainDark">
                     <MemoizedMarkdown
@@ -217,19 +220,6 @@ export default function Answer({ searchResults }: AnswerProps) {
               ))}
             </div>
           )}
-          <div className="w-full basis-1/2">
-            {chatFast.messages.map((m) => (
-              <div key={m.id} className=" text-textMainDark">
-                <div className="inline text-pretty break-words leading-normal prose dark:prose-invert prose-h1:text-xl prose-h2:text-lg prose-h3:text-[17px] prose-h4:text-[16.5px] prose-table:mb-12 prose-p:dark:text-textMainDark prose-strong:dark:text-textMainDark prose-strong:underline prose-strong:underline-offset-2 prose-strong:decoration-textOffDark prose-li:list-outside prose-ol:space-y-6 prose-ol:my-4 dark:text-textMainDark">
-                  <MemoizedMarkdown
-                    id={m.id}
-                    content={m.content}
-                    searchResults={searchResults ?? []}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </span>
     </div>

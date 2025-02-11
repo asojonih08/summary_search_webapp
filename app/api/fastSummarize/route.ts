@@ -40,12 +40,12 @@ export async function POST(req: Request) {
 
   // Parse JSON if applicable
   const decodedPayload = JSON.parse(decodedString);
-  console.log(
-    "\nWords: ",
-    decodedPayload.split(" ").length,
-    "Generated Prompt For Chat Speed: ",
-    decodedPayload
-  );
+  //   console.log(
+  //     "\nWords: ",
+  //     decodedPayload.split(" ").length,
+  //     "Generated Prompt For Chat Speed: ",
+  //     decodedPayload
+  //   );
   const result = streamText({
     model: Model.OPENAI.GPT_4O_MINI,
     prompt: decodedPayload,
