@@ -53,7 +53,7 @@ interface MemoizedMarkdownBlockProps {
 // Memoized Markdown Block
 const MemoizedMarkdownBlock = memo(
   ({ content, searchResults }: MemoizedMarkdownBlockProps) => {
-    console.log("Content:  ", content);
+    // console.log("Content:  ", content);
     return (
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
@@ -153,12 +153,12 @@ const MemoizedMarkdownBlock = memo(
                 </li>
               );
             }
-            console.log(
-              "Other children: ",
-              children,
-              "  TYPE: ",
-              typeof children
-            );
+            // console.log(
+            //   "Other children: ",
+            //   children,
+            //   "  TYPE: ",
+            //   typeof children
+            // );
             return children;
           },
           strong: ({ children }) => {
