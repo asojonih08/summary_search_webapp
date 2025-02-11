@@ -39,7 +39,6 @@ export default function SearchCard() {
     // Temporarily remove router.push to see if click event works
     router.push(`/search/new?q=${suggestion}`);
   };
-  // console.log("Arrow Event Triggered: ", arrowEventTriggered);
   return (
     <div className="h-full">
       <div
