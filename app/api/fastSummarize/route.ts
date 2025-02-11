@@ -20,10 +20,10 @@ const lambda = new LambdaClient({
 });
 
 export async function POST(req: Request) {
-  console.log("Called Chat 2 Speed API\nModel: ");
+  console.log("Called Chat Fast Speed API\nModel: ");
   const { searchQuery, searchResultsItems } = await req.json();
   const input: InvokeCommandInput = {
-    FunctionName: process.env.SCRAPER_LAMBDA_FUNCTION_NAME,
+    FunctionName: process.env.FAST_SCRAPER_LAMBDA_FUNCTION_NAME,
     InvocationType: "RequestResponse" as const,
     LogType: "None",
     Payload: new TextEncoder().encode(
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
   console.log(
     "\nWords: ",
     decodedPayload.split(" ").length,
-    "Generated Prompt For Chat2: ",
+    "Generated Prompt For Chat Speed: ",
     decodedPayload
   );
   const result = streamText({

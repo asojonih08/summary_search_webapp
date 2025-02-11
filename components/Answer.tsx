@@ -20,12 +20,13 @@ export default function Answer({ searchResults }: AnswerProps) {
   const [isStreaming, setIsStreaming] = useState(false);
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("q") || "";
-  // const chat1 = useChat({
-  //   body: {
-  //     searchQuery,
-  //     searchResultsItems: searchResults,
-  //   },
-  // });
+  const chatFast = useChat({
+    api: "/api/fastSummarize",
+    body: {
+      searchQuery,
+      searchResultsItems: searchResults,
+    },
+  });
   const chat2 = useChat({
     api: "/api/summarize",
     body: {
@@ -71,14 +72,14 @@ export default function Answer({ searchResults }: AnswerProps) {
     //     setIsStreaming(false);
     //   }
     // };
-    // const hSubmit = async () =>
-    //   chat1.handleSubmit(new Event("submit") as Event, {
-    //     body: {
-    //       searchQuery,
-    //       searchResultsItems: searchResults,
-    //     },
-    //     allowEmptySubmit: true,
-    //   });
+    const hSubmit = async () =>
+      chatFast.handleSubmit(new Event("submit") as Event, {
+        body: {
+          searchQuery,
+          searchResultsItems: searchResults,
+        },
+        allowEmptySubmit: true,
+      });
     const hSubmit2 = async () =>
       chat2.handleSubmit(new Event("submit") as Event, {
         body: {
@@ -89,13 +90,9 @@ export default function Answer({ searchResults }: AnswerProps) {
       });
     const handleSubmits = async () => {
       if (searchQuery && searchResults) {
-        // const [o, t, th] = await Promise.all([
-        //   handleSubmitOld(),
-        //   hSubmit(),
-        //   hSubmit2(),
-        // ]);
-        // console.log(o, t, th);
-        hSubmit2();
+        const [o, t] = await Promise.all([hSubmit2(), hSubmit()]);
+        console.log(o, t);
+
         setIsStreaming(false);
       }
     };
@@ -206,10 +203,10 @@ export default function Answer({ searchResults }: AnswerProps) {
           {!isStreaming ? (
             <AnswerSkeleton />
           ) : (
-            <div className="w-full">
+            <div className="w-full basis-1/2">
               {chat2.messages.map((m) => (
                 <div key={m.id} className=" text-textMainDark">
-                  <div className="inline text-pretty break-words leading-normal prose prose-table:mb-16 prose-p:dark:text-textMainDark prose-strong:dark:text-textMainDark prose-strong:underline prose-strong:underline-offset-2 prose-strong:decoration-textOffDark prose-li:list-outside prose-ol:space-y-6 prose-ol:my-4 dark:text-textMainDark">
+                  <div className="inline text-pretty break-words leading-normal prose dark:prose-invert prose-h1:text-xl prose-h2:text-lg prose-h3:text-[17px] prose-h4:text-[16.5px] prose-table:mb-12 prose-p:dark:text-textMainDark prose-strong:dark:text-textMainDark prose-strong:underline prose-strong:underline-offset-2 prose-strong:decoration-textOffDark prose-li:list-outside prose-ol:space-y-6 prose-ol:my-4 dark:text-textMainDark">
                     <MemoizedMarkdown
                       id={m.id}
                       content={m.content}
@@ -220,6 +217,19 @@ export default function Answer({ searchResults }: AnswerProps) {
               ))}
             </div>
           )}
+          <div className="w-full basis-1/2">
+            {chatFast.messages.map((m) => (
+              <div key={m.id} className=" text-textMainDark">
+                <div className="inline text-pretty break-words leading-normal prose dark:prose-invert prose-h1:text-xl prose-h2:text-lg prose-h3:text-[17px] prose-h4:text-[16.5px] prose-table:mb-12 prose-p:dark:text-textMainDark prose-strong:dark:text-textMainDark prose-strong:underline prose-strong:underline-offset-2 prose-strong:decoration-textOffDark prose-li:list-outside prose-ol:space-y-6 prose-ol:my-4 dark:text-textMainDark">
+                  <MemoizedMarkdown
+                    id={m.id}
+                    content={m.content}
+                    searchResults={searchResults ?? []}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </span>
     </div>
