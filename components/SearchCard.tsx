@@ -41,6 +41,9 @@ export default function SearchCard() {
   };
   return (
     <div className="h-full w-full flex flex-col items-center sm:px-2 md:px-8 sm:max-w-[768px]">
+      <h3 className="dark:text-textMainDark md:text-4xl text-3xl mb-10 px-4 md:place-self-center place-self-start">
+        What do you want to know?
+      </h3>
       <div
         className={`${
           inputFocused
