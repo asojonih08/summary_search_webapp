@@ -72,7 +72,7 @@ export default function SearchCard() {
         inputFocused &&
         displaySuggestions.length > 0 && (
           <div
-            className={`dark:border-borderMain/75 ring-1 ring-borderMain dark:bg-mainBackgroundDark border-x-[1px] border-b-[1px] transition-colors duration-200 rounded-b-md shadow-sm w-[640px] h-auto flex flex-col  py-1.5`}
+            className={`dark:border-borderMain/75 ring-1 ring-borderMain dark:bg-mainBackgroundDark border-x-[1px] border-b-[1px] transition-colors duration-200 rounded-b-md shadow-sm max-w-[640px] w-full h-auto flex flex-col  py-1.5`}
           >
             {displaySuggestions.map((suggestion, index) => (
               <div
@@ -86,8 +86,10 @@ export default function SearchCard() {
               >
                 <div
                   className={`${
-                    index === 0 ? "pt-3 pb-2.5" : "pt-4 pb-2.5"
-                  } dark:text-textMainDark/90 text-[14px] font-medium cursor-pointer h-full  flex justify-between items-center`}
+                    index === 0
+                      ? "md:pt-3 md:pb-2.5 pt-1.5 pb-1"
+                      : "md:pt-4 md:pb-2.5 pt-2.5 pb-1"
+                  } dark:text-textMainDark/90 text-[14px] md:font-medium cursor-pointer h-full  flex justify-between items-center`}
                 >
                   <span>{suggestion}</span>
                   <ArrowUpLeft className="dark:text-textOffDark/90 h-4 w-4" />
