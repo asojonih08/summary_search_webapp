@@ -20,7 +20,7 @@ export default {
         textOffDark: "#8D9191",
         caretColor: "#15808d",
         offsetPlusDark: "#2D2F2F",
-        offsetDark: "#2B2D2D",
+        offsetDark: "#202222",
         superDark: "#1cb9cd",
       },
       borderRadius: {

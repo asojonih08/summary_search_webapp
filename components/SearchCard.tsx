@@ -40,7 +40,7 @@ export default function SearchCard() {
     router.push(`/search/new?q=${suggestion}`);
   };
   return (
-    <div className="h-full">
+    <div className="h-full w-full flex flex-col items-center sm:px-2 md:px-8 sm:max-w-[768px]">
       <div
         className={`${
           inputFocused
@@ -48,7 +48,7 @@ export default function SearchCard() {
             : "dark:border-borderMain/75 rounded-md"
         } ${
           suggestions ? "" : "rounded-md"
-        } dark:bg-mainBackgroundDark border-[1px] transition-colors duration-200 shadow-sm w-[640px] h-[114px] flex flex-col pt-4 pb-0`}
+        } dark:bg-mainBackgroundDark border-[1px] transition-colors duration-200 shadow-sm w-full h-[114px] max-w-[640px] grow flex flex-col pt-4 pb-0`}
       >
         <div className="basis-[42%] px-4">
           <SearchInput

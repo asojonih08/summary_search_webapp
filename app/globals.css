@@ -9,7 +9,9 @@
   display: block;
   background: #424242;
 }
-
+.mobile-navigation-height {
+  height: calc(64px + env(safe-area-inset-bottom, 0));
+}
 /* Track */
 ::-webkit-scrollbar-track {
   background: transparent;

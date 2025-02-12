@@ -5,6 +5,7 @@ import localFont from "next/font/local";
 import { ReactQueryClientProvider } from "@/components/QueryClientProvider";
 import { SidebarOpenProvider } from "@/components/SidebarOpenContext";
 import { SourcesOpenProvider } from "@/components/SourcesOpenContext";
+import MobileNavigation from "@/components/MobileNavigation";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -63,12 +64,17 @@ export default function RootLayout({
           <html className="dark" lang="en">
             <body className={`${fkGroteskNeue.className} antialiased`}>
               <main>
-                <div className="flex h-full min-h-[100dvh]">
-                  <Sidebar />
-                  <div className="dark:bg-mainBackgroundDark w-full flex justify-center">
-                    <div className="dark:bg-contentBackgroundDark rounded-lg w-full h-[98.5%] pb-52 top-0 bottom-0 border border-gray-400/10 shadow-sm right-0 left-0 my-auto mr-2.5">
+                <div className="flex md:flex-row flex-col h-full min-h-[100dvh]">
+                  <div className="md:w-auto md:block hidden">
+                    <Sidebar />
+                  </div>
+                  <div className="dark:bg-mainBackgroundDark w-full  flex justify-center">
+                    <div className="dark:bg-contentBackgroundDark rounded-lg w-full md:h-[98.5%] h-screen pb-52 top-0 bottom-0 border border-gray-400/10 shadow-sm right-0 left-0 my-auto md:mr-2.5">
                       {children}
                     </div>
+                  </div>
+                  <div className="md:w-auto md:hidden block">
+                    <MobileNavigation />
                   </div>
                 </div>
               </main>
