@@ -7,18 +7,14 @@ interface LogoProps {
 
 export default function Logo({ size = "medium" }: LogoProps) {
   const iconSize =
-    size === "medium" ? "h-7 w-7" : size === "large" ? "w-9 h-9" : "";
+    size === "medium" ? "h-7 w-7" : size === "large" ? "w-8 h-8" : "";
   const textSize =
-    size === "medium"
-      ? "text-[23.5px]"
-      : size === "large"
-      ? "text-[25.5px]"
-      : "";
+    size === "medium" ? "text-[23.5px]" : size === "large" ? "text-[25px]" : "";
   return (
-    <div className="flex gap-1 items-center">
+    <div className="flex gap-1.5 items-center">
       <LogoIcon className={`${iconSize} dark:text-superDark`} />
       <p className={`${textSize} dark:text-[#E8E8E6] tracking-[0.015em]`}>
-        perplexity
+        synoptics
       </p>
     </div>
   );
