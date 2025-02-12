@@ -6,6 +6,7 @@ import { ReactQueryClientProvider } from "@/components/QueryClientProvider";
 import { SidebarOpenProvider } from "@/components/SidebarOpenContext";
 import { SourcesOpenProvider } from "@/components/SourcesOpenContext";
 import MobileNavigation from "@/components/MobileNavigation";
+import MobileHeader from "@/components/MobileHeader";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -64,9 +65,12 @@ export default function RootLayout({
           <html className="dark" lang="en">
             <body className={`${fkGroteskNeue.className} antialiased`}>
               <main>
-                <div className="flex md:flex-row flex-col h-screen min-h-[100dvh]">
+                <div className="flex md:flex-row flex-col md:h-screen h-[calc(100dvh_-_64px_+_env(safe-area-inset-bottom,_0))]">
                   <div className="md:w-auto md:block hidden">
                     <Sidebar />
+                  </div>
+                  <div className="md:hidden block">
+                    <MobileHeader />
                   </div>
                   <div className="dark:bg-mainBackgroundDark w-full h-full flex justify-center">
                     <div className="dark:bg-contentBackgroundDark rounded-lg w-full md:h-[98.5%] h-full pb-52 top-0 bottom-0 border border-gray-400/10 shadow-sm right-0 left-0 my-auto md:mr-2.5">

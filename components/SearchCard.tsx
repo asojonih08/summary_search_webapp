@@ -42,9 +42,7 @@ export default function SearchCard() {
   return (
     <div className="h-full w-full flex flex-col items-center sm:px-2 md:px-8">
       <h3
-        className={`${
-          inputFocused ? "md:block hidden" : "block"
-        } dark:text-textMainDark md:text-4xl text-3xl mb-10 px-4 md:place-self-center place-self-start`}
+        className={`mb-10 dark:text-textMainDark md:text-4xl text-3xl px-4 md:place-self-center place-self-start`}
       >
         What do you want to know?
       </h3>
