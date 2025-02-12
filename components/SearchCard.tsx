@@ -40,8 +40,12 @@ export default function SearchCard() {
     router.push(`/search/new?q=${suggestion}`);
   };
   return (
-    <div className="h-full w-full flex flex-col items-center sm:px-2 md:px-8 sm:max-w-[768px]">
-      <h3 className="dark:text-textMainDark md:text-4xl text-3xl mb-10 px-4 md:place-self-center place-self-start">
+    <div className="h-full w-full flex flex-col items-center sm:px-2 md:px-8">
+      <h3
+        className={`${
+          inputFocused ? "md:block hidden" : "block"
+        } dark:text-textMainDark md:text-4xl text-3xl mb-10 px-4 md:place-self-center place-self-start`}
+      >
         What do you want to know?
       </h3>
       <div
@@ -51,7 +55,7 @@ export default function SearchCard() {
             : "dark:border-borderMain/75 rounded-md"
         } ${
           suggestions ? "" : "rounded-md"
-        } dark:bg-mainBackgroundDark border-[1px] transition-colors duration-200 shadow-sm w-full h-[114px] max-w-[640px] grow flex flex-col pt-4 pb-0`}
+        } dark:bg-mainBackgroundDark border-[1px] transition-all duration-200 shadow-sm w-full h-[114px] max-w-[640px] grow flex flex-col pt-4 pb-0`}
       >
         <div className="basis-[42%] px-4">
           <SearchInput
