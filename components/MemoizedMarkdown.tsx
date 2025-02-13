@@ -65,7 +65,7 @@ const MemoizedMarkdownBlock = memo(
               : [children];
 
             return (
-              <span className="whitespace-pre-wrap">
+              <span className="whitespace-normal">
                 {content.map((child) => {
                   if (typeof child === "string") {
                     const parts = child.split(/(CITATION_\d+)/g);
