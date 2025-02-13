@@ -140,7 +140,7 @@ export default function SearchImages({
                       setZoomedImageIndex(index);
                       setShowMoreImages(true);
                     }}
-                    className="col-span-2 relative overflow-hidden dark:border-borderMain/50 border rounded-md h-[158px] hover:scale-[102%] transition-all duration-300 flex items-center justify-center cursor-zoom-in shadow-md hover:shadow-lg"
+                    className="lg:col-span-2 col-span-1 relative overflow-hidden dark:border-borderMain/50 border rounded-md h-[158px] hover:scale-[102%] transition-all duration-300 flex items-center justify-center cursor-zoom-in shadow-md hover:shadow-lg"
                   >
                     <Image
                       alt={image.url ?? "Image"}

@@ -12,6 +12,7 @@ import SearchImages from "./SearchImages";
 import SearchVideos from "./SearchVideos";
 import { getSearchResults } from "@/actions/getSearchResults";
 import Answer from "./Answer";
+import HorizontalSearchImages from "./HorizontalSearchImages";
 
 export default function SearchResults() {
   const { sourcesOpen } = useSourcesOpen();
@@ -27,11 +28,17 @@ export default function SearchResults() {
   console.log("isLoading in Search Results: ", isLoading);
 
   return (
-    <div className="grid-cols-12 md:grid gap-12 w-full max-w-[1100px] h-full flex justify-center">
-      <div className="col-span-8">
+    <div className="grid-cols-12 md:grid gap-12 w-full max-w-[1100px] h-full">
+      <div className="col-span-8 will-change-auto">
         <h2 className="text-3xl dark:text-textMainDark my-8">{search_query}</h2>
-        <div className="flex flex-col gap-7">
+        <div className="flex flex-col gap-7 overflow-auto">
           <Sources searchResults={searchResults} isLoading={isLoading} />
+          <div className="md:hidden md:flex-none flex w-full items-center justify-center h-auto">
+            <HorizontalSearchImages
+              searchQuery={search_query}
+              searchResults={searchResults}
+            />
+          </div>
           <Answer searchResults={searchResults} />
         </div>
         <SummaryActions />
@@ -40,7 +47,7 @@ export default function SearchResults() {
       </div>
       <div className="col-span-4 isolate">
         {!sourcesOpen && !isLoading && (
-          <div className="flex flex-col gap-3 -mx-4 px-4 mt-8">
+          <div className="md:flex flex-col gap-3 -mx-4 px-4 mt-8 min-w-0 hidden">
             <SearchImages
               searchQuery={search_query}
               searchResults={searchResults}
