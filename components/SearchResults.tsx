@@ -33,7 +33,7 @@ export default function SearchResults() {
         <h2 className="text-3xl dark:text-textMainDark my-8">{search_query}</h2>
         <div className="flex flex-col gap-7 overflow-auto">
           <Sources searchResults={searchResults} isLoading={isLoading} />
-          <div className="md:hidden md:flex-none flex w-full items-center justify-center h-auto">
+          <div className="md:hidden md:flex-none flex w-full items-center justify-center">
             <HorizontalSearchImages
               searchQuery={search_query}
               searchResults={searchResults}
