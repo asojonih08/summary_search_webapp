@@ -65,19 +65,19 @@ export default function RootLayout({
           <html className="dark" lang="en">
             <body className={`${fkGroteskNeue.className} antialiased`}>
               <main>
-                <div className="flex md:flex-row flex-col md:h-screen h-[calc(100dvh_-_64px_+_env(safe-area-inset-bottom,_0))]">
-                  <div className="md:w-auto md:block hidden">
+                <div className="flex md:flex-row flex-col md:h-full md:min-h-[100dvh] h-[calc(100dvh_-_64px_+_env(safe-area-inset-bottom,_0))]">
+                  <div className="md:block hidden min-h-full">
                     <Sidebar />
                   </div>
                   <div className="md:hidden block">
                     <MobileHeader />
                   </div>
-                  <div className="dark:bg-mainBackgroundDark w-full h-full flex justify-center">
-                    <div className="dark:bg-contentBackgroundDark rounded-lg w-full md:h-[98.5%] h-full pb-52 top-0 bottom-0 border border-gray-400/10 shadow-sm right-0 left-0 my-auto md:mr-2.5">
+                  <div className="dark:bg-mainBackgroundDark w-full flex justify-center">
+                    <div className="dark:bg-contentBackgroundDark rounded-lg w-full md:h-[98.5%] pb-52 top-0 bottom-0 border border-gray-400/10 shadow-sm right-0 left-0 my-auto md:mr-2.5">
                       {children}
                     </div>
                   </div>
-                  <div className="md:w-auto md:hidden block">
+                  <div className="md:md:hidden block">
                     <MobileNavigation />
                   </div>
                 </div>

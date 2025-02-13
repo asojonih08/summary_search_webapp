@@ -44,7 +44,7 @@ export default function Sidebar() {
       variants={containerVariants}
       className={`${
         isOpen ? "" : ""
-      } z-50 min-w-[90px] min-h-screen py-4 pb-16 dark:bg-mainBackgroundDark flex flex-col justify-between items-center`}
+      } z-50 min-w-[90px] min-h-screen h-full py-4 pb-16 dark:bg-mainBackgroundDark flex flex-col justify-between items-center`}
     >
       <div className="sticky top-4 flex flex-col gap-24 w-full items-center">
         <div

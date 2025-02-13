@@ -53,7 +53,7 @@ export default function SearchCard() {
             : "dark:border-borderMain/75 rounded-md"
         } ${
           suggestions ? "" : "rounded-md"
-        } dark:bg-mainBackgroundDark border-[1px] transition-all duration-200 shadow-sm w-full h-[114px] max-w-[640px] grow flex flex-col pt-4 pb-0`}
+        } dark:bg-mainBackgroundDark border-[1px] transition-all duration-200 shadow-sm w-full h-[114px] max-w-[640px] flex flex-col pt-4 pb-0`}
       >
         <div className="basis-[42%] px-4">
           <SearchInput
