@@ -65,14 +65,14 @@ const MemoizedMarkdownBlock = memo(
               : [children];
 
             return (
-              <span className="whitespace-normal">
+              <span>
                 {content.map((child) => {
                   if (typeof child === "string") {
                     const parts = child.split(/(CITATION_\d+)/g);
                     return parts.map((part, index) => {
                       if (part === ".") part = part.replace(".", ". ");
                       return part.startsWith("CITATION_") ? (
-                        <span className="inline" key={index}>
+                        <span className="tabular-nums" key={index}>
                           <Citation
                             sourceNumber={Number(
                               part.replace("CITATION_", "").replace(/_/g, ", ")
@@ -101,7 +101,7 @@ const MemoizedMarkdownBlock = memo(
                 <li>
                   {parts.map((part, index) => {
                     return part.startsWith("CITATION_") ? (
-                      <span className="inline" key={index}>
+                      <span className="tabular-nums" key={index}>
                         <Citation
                           sourceNumber={Number(
                             part.replace("CITATION_", "").replace(/_/g, ", ")
@@ -129,7 +129,10 @@ const MemoizedMarkdownBlock = memo(
                       //   console.log("parts in ReactMarkdown 2: ", parts);
                       return parts.map((part, subIndex) =>
                         part.startsWith("CITATION_") ? (
-                          <span className="inline" key={`${index}-${subIndex}`}>
+                          <span
+                            className="tabular-nums"
+                            key={`${index}-${subIndex}`}
+                          >
                             <Citation
                               sourceNumber={Number(
                                 part
@@ -172,7 +175,7 @@ const MemoizedMarkdownBlock = memo(
                     return parts.map((part, index) => {
                       if (part === ".") part = part.replace(".", ". ");
                       return part.startsWith("CITATION_") ? (
-                        <span className="inline" key={index}>
+                        <span className="tabular-nums" key={index}>
                           <Citation
                             sourceNumber={Number(
                               part.replace("CITATION_", "").replace(/_/g, ", ")
@@ -205,7 +208,7 @@ const MemoizedMarkdownBlock = memo(
                     return parts.map((part, index) => {
                       if (part === ".") part = part.replace(".", ". ");
                       return part.startsWith("CITATION_") ? (
-                        <span className="inline" key={index}>
+                        <span className="tabular-nums" key={index}>
                           <Citation
                             sourceNumber={Number(
                               part.replace("CITATION_", "").replace(/_/g, ", ")
