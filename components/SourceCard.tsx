@@ -70,7 +70,7 @@ export default function SourceCard({
                 : "dark:bg-mainBackgroundDark"
             } ${
               !sourcesOpen ? "dark:hover:bg-offsetPlusDark" : ""
-            } h-[84px] min-h-[60px] w-[163px] rounded-lg border-borderMain/10 border-[0.3px] p-2 transition-all duration-300 cursor-pointer`}
+            } lg:h-[92px] h-[88px] min-h-[60px] w-[163px] rounded-lg border-borderMain/10 border-[0.3px] p-2 transition-all duration-300 cursor-pointer`}
           >
             <div
               className={`${
@@ -78,7 +78,7 @@ export default function SourceCard({
               } dark:text-textMainDark text-left text-xs flex flex-col justify-between gap-1 h-full line-clamp-3`}
             >
               {variant === "regular" && (
-                <p>{truncateStringPreserveWords(title, 54)}</p>
+                <p>{truncateStringPreserveWords(title, 52)}</p>
               )}
               {variant === "multiple sources" && (
                 <span className="">{avatars}</span>
