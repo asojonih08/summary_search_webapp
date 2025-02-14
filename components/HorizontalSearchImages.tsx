@@ -61,10 +61,10 @@ export default function HorizontalSearchImages({
     : [];
 
   return (
-    <div className="sm:h-[120px] h-[150px] sm:my-4 my-5 w-full">
+    <div className="sm:h-[125px] h-[135px] sm:my-4 my-5 w-full">
       {!isLoading && validImages && (
         <Carousel opts={{ skipSnaps: true }}>
-          <CarouselContent className="mx-3 gap-3 sm:w-[115%] w-[110%]">
+          <CarouselContent className="mx-2.5 gap-3  w-[97%]">
             {validImages.map((image, index) => (
               <Dialog key={index}>
                 <DialogTrigger asChild>

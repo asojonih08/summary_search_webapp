@@ -171,7 +171,7 @@ export default function Answer({ searchResults }: AnswerProps) {
   };
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 md:mt-0 -mt-3.5">
       <div className="flex gap-2 items-center">
         <LoadingLogoIcon
           className="h-[22px] w-[22px] dark:text-textMainDark"
