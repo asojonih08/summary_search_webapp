@@ -54,7 +54,13 @@ export default function SourceCard({
   );
   return (
     <TooltipProvider delayDuration={300}>
-      <Tooltip open={variant === "multiple sources" ? false : undefined}>
+      <Tooltip
+        open={
+          variant === "multiple sources" || variant === "small screens"
+            ? false
+            : undefined
+        }
+      >
         <TooltipTrigger asChild>
           <a
             onClick={
@@ -66,27 +72,29 @@ export default function SourceCard({
             target={variant === "multiple sources" ? undefined : "_blank"}
             className={`${
               sourcesOpen && variant === "multiple sources"
-                ? "dark:bg-superDark/20 ring-1 dark:ring-superDark/80"
+                ? "md:dark:bg-superDark/20 md:ring-1 md:dark:ring-superDark/80"
                 : "dark:bg-mainBackgroundDark"
             } ${
               !sourcesOpen ? "dark:hover:bg-offsetPlusDark" : ""
-            } lg:h-[92px] h-[88px] min-h-[60px] w-[163px] rounded-lg border-borderMain/10 border-[0.3px] p-2 transition-all duration-300 cursor-pointer`}
+            } w-full md:w-auto h-full block rounded-lg border-borderMain/10 border-[0.3px] p-2 transition-all duration-300 cursor-pointer`}
           >
             <div
               className={`${
                 variant === "multiple sources" ? "justify-between" : ""
-              } dark:text-textMainDark text-left text-xs flex flex-col justify-between gap-1 h-full line-clamp-3`}
+              } dark:text-textMainDark text-left text-xs flex flex-col justify-between md:gap-1.5 gap-2 w-full h-full line-clamp-1`}
             >
-              {variant === "regular" && (
-                <p>{truncateStringPreserveWords(title, 52)}</p>
+              {variant !== "multiple sources" && (
+                <p className="md:line-clamp-3 line-clamp-1">
+                  {truncateStringPreserveWords(title, 52)}
+                </p>
               )}
               {variant === "multiple sources" && (
                 <span className="">{avatars}</span>
               )}
               <div className="flex gap-1 items-center">
-                {variant === "regular" && avatar}
+                {variant !== "multiple sources" && avatar}
                 <span className="dark:text-textOffDark">
-                  {variant === "regular"
+                  {variant !== "multiple sources"
                     ? condesedDisplayLink
                     : sourcesOpen
                     ? "Hide sources"
