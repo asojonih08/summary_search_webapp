@@ -7,6 +7,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { useQuery } from "@tanstack/react-query";
 import { fetchSuggestions } from "@/actions/getSuggestions";
 import { useRouter } from "next/navigation";
+import { getRedditBestCommentsForPost } from "@/actions/getRedditBestCommentsForPost";
 
 export default function SearchCard() {
   const router = useRouter();
@@ -21,6 +22,15 @@ export default function SearchCard() {
     queryFn: () => fetchSuggestions(debouncedQuery),
     enabled: !!debouncedQuery && !arrowEventTriggered, // Fetch only when there's a query
   });
+
+  useEffect(() => {
+    const fetchComments = async () =>
+      getRedditBestCommentsForPost(
+        "https://www.reddit.com/r/Coffee/comments/ygj3gt/wanted_quality_grinder_at_relatively_affordable/",
+        5
+      );
+    console.log(fetchComments());
+  }, []);
 
   useEffect(() => {
     const newSuggestions = suggestions ? suggestions : [];
