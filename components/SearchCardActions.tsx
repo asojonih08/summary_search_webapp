@@ -10,6 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import FocusSelection from "./FocusSelection";
 
 interface SearchCardActionsProps {
   searchInput: string;
@@ -25,25 +26,7 @@ export default function SearchCardActions({
   }
   return (
     <div className="flex justify-between items-center h-full dark:text-textOffDark z-50">
-      <TooltipProvider delayDuration={300}>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant={"ghost"}
-              className="h-[32px] w-[78px] rounded-3xl text-sm flex gap-1 items-center dark:hover:text-textMainDark dark:hover:bg-offsetPlusDark"
-            >
-              <ListFilter />
-              <span className="font-medium">Focus</span>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent className="dark:bg-[#2D2F2F] dark:shadow-sm p-1.5 px-2 h-7 flex items-center justify-center">
-            <p className="text-xs font-medium h-full">
-              Set a focus for your sources
-            </p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-
+      <FocusSelection />
       <div className="flex gap-4 items-center">
         <div className="flex gap-2 items-center">
           <Switch className="dark:border-borderMain/40 border-[1.8px] data-[state=checked]:dark:bg-mainBackgroundDark data-[state=unchecked]:dark:bg-mainBackgroundDark"></Switch>

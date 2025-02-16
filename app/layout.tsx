@@ -6,6 +6,7 @@ import { ReactQueryClientProvider } from "@/components/QueryClientProvider";
 import { SidebarOpenProvider } from "@/components/SidebarOpenContext";
 import { SourcesOpenProvider } from "@/components/SourcesOpenContext";
 import MobileNavigation from "@/components/MobileNavigation";
+import { SourceFocusProvider } from "@/components/SourceFocusContext";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -59,32 +60,34 @@ export default function RootLayout({
 }>) {
   return (
     <ReactQueryClientProvider>
-      <SidebarOpenProvider>
-        <SourcesOpenProvider>
-          <html className="dark" lang="en">
-            <body
-              className={`${fkGroteskNeue.className} antialiased dark:bg-contentBackgroundDark`}
-            >
-              <main>
-                <div className="flex md:flex-row flex-col md:h-[100%] md:min-h-[100dvh] h-[100%]">
-                  <div className="md:block hidden min-h-full">
-                    <Sidebar />
-                  </div>
+      <SourceFocusProvider>
+        <SidebarOpenProvider>
+          <SourcesOpenProvider>
+            <html className="dark" lang="en">
+              <body
+                className={`${fkGroteskNeue.className} antialiased dark:bg-contentBackgroundDark`}
+              >
+                <main>
+                  <div className="flex md:flex-row flex-col md:h-[100%] md:min-h-[100dvh] h-[100%]">
+                    <div className="md:block hidden min-h-full">
+                      <Sidebar />
+                    </div>
 
-                  <div className="dark:bg-mainBackgroundDark w-full md:h-auto h-[100%] flex justify-center">
-                    <div className="dark:bg-contentBackgroundDark rounded-lg w-full h-full md:h-[98.5%] pb-52 top-0 bottom-0 md:border border-gray-400/10 shadow-sm right-0 left-0 my-auto md:mr-2.5">
-                      {children}
+                    <div className="dark:bg-mainBackgroundDark w-full md:h-auto h-[100%] flex justify-center">
+                      <div className="dark:bg-contentBackgroundDark rounded-lg w-full h-full md:h-[98.5%] pb-52 top-0 bottom-0 md:border border-gray-400/10 shadow-sm right-0 left-0 my-auto md:mr-2.5">
+                        {children}
+                      </div>
+                    </div>
+                    <div className="md:md:hidden block">
+                      <MobileNavigation />
                     </div>
                   </div>
-                  <div className="md:md:hidden block">
-                    <MobileNavigation />
-                  </div>
-                </div>
-              </main>
-            </body>
-          </html>
-        </SourcesOpenProvider>
-      </SidebarOpenProvider>
+                </main>
+              </body>
+            </html>
+          </SourcesOpenProvider>
+        </SidebarOpenProvider>
+      </SourceFocusProvider>
     </ReactQueryClientProvider>
   );
 }

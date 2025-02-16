@@ -13,6 +13,7 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        backgroundDark: "#1b191a",
         mainBackgroundDark: "#202222",
         contentBackgroundDark: "#191A1A",
         borderMain: "#3D3F40",
