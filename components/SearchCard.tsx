@@ -8,8 +8,10 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchSuggestions } from "@/actions/getSuggestions";
 import { useRouter } from "next/navigation";
 import { getRedditBestCommentsForPost } from "@/actions/getRedditBestCommentsForPost";
+import { useSourceFocus } from "./SourceFocusContext";
 
 export default function SearchCard() {
+  const { sourceFocusSelection } = useSourceFocus();
   const router = useRouter();
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
   const [displaySuggestions, setDisplaySuggestions] = useState<string[]>([]);
@@ -47,7 +49,9 @@ export default function SearchCard() {
     console.log("Search query pressed: ", suggestion);
     setSearchInput(suggestion);
     // Temporarily remove router.push to see if click event works
-    router.push(`/search/new?q=${suggestion}`);
+    router.push(
+      `/search/new?q=${suggestion}&source-focus=${sourceFocusSelection}`
+    );
   };
   return (
     <div className="h-full w-full flex flex-col items-center sm:px-2 md:px-8">

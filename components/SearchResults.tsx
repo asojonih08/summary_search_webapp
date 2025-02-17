@@ -17,25 +17,28 @@ import HorizontalSearchImages from "./HorizontalSearchImages";
 export default function SearchResults() {
   const { sourcesOpen } = useSourcesOpen();
   const searchParams = useSearchParams();
-  const search_query = searchParams.get("q") || "";
+  const searchQuery = searchParams.get("q") || "";
+  const sourceFocusSelection = searchParams.get("source-focus") || "";
   const { data: searchResults, isLoading } = useQuery({
-    queryKey: ["searchResults", search_query],
-    queryFn: () => getSearchResults(search_query),
-    enabled: !!search_query, // Fetch only when there's a query
+    queryKey: ["searchResults", searchQuery],
+    queryFn: () => getSearchResults(searchQuery),
+    enabled: !!searchQuery, // Fetch only when there's a query
   });
   console.log("Search Results:  ", searchResults);
-  console.log("Search Query:  ", search_query);
+  console.log("Search Query:  ", searchQuery);
   console.log("isLoading in Search Results: ", isLoading);
 
   return (
     <div className="grid-cols-12 md:grid gap-12 w-full max-w-[1100px] h-full">
       <div className="col-span-8 will-change-auto">
-        <h2 className="text-3xl dark:text-textMainDark my-8">{search_query}</h2>
+        <h2 className="text-3xl dark:text-textMainDark my-8">{searchQuery}</h2>
         <div className="flex flex-col gap-7 overflow-auto">
-          <Sources searchResults={searchResults} isLoading={isLoading} />
+          {sourceFocusSelection !== "Chat" && (
+            <Sources searchResults={searchResults} isLoading={isLoading} />
+          )}
           <div className="md:hidden md:flex-none flex w-full items-center justify-center -mb-1">
             <HorizontalSearchImages
-              searchQuery={search_query}
+              searchQuery={searchQuery}
               searchResults={searchResults}
             />
           </div>
@@ -49,13 +52,15 @@ export default function SearchResults() {
         {!sourcesOpen && !isLoading && (
           <div className="md:flex flex-col gap-3 -mx-4 px-4 mt-8 min-w-0 hidden">
             <SearchImages
-              searchQuery={search_query}
+              searchQuery={searchQuery}
               searchResults={searchResults}
             />
-            <SearchVideos searchQuery={search_query} />
+            <SearchVideos searchQuery={searchQuery} />
           </div>
         )}
-        {sourcesOpen && <AllSourcesList searchResults={searchResults} />}
+        {sourcesOpen && sourceFocusSelection !== "Chat" && (
+          <AllSourcesList searchResults={searchResults} />
+        )}
       </div>
     </div>
   );
