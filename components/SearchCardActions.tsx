@@ -11,6 +11,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import FocusSelection from "./FocusSelection";
+import { useSourceFocus } from "./SourceFocusContext";
 
 interface SearchCardActionsProps {
   searchInput: string;
@@ -20,9 +21,12 @@ export default function SearchCardActions({
   searchInput,
 }: SearchCardActionsProps) {
   const router = useRouter();
+  const { sourceFocusSelection } = useSourceFocus();
   async function handleSearchSubmit() {
     console.log("handleSearchSubmit");
-    router.push(`/search/new?q=${searchInput}`);
+    router.push(
+      `/search/new?q=${searchInput}&source-focus=${sourceFocusSelection}`
+    );
   }
   return (
     <div className="flex justify-between items-center h-full dark:text-textOffDark z-50">

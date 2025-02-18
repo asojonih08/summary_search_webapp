@@ -13,6 +13,7 @@ import SearchVideos from "./SearchVideos";
 import { getSearchResults } from "@/actions/getSearchResults";
 import Answer from "./Answer";
 import HorizontalSearchImages from "./HorizontalSearchImages";
+import { getBestCommentsForRelevantPosts } from "@/actions/getBestCommentsForRelevantPosts";
 
 export default function SearchResults() {
   const { sourcesOpen } = useSourcesOpen();
@@ -21,12 +22,29 @@ export default function SearchResults() {
   const sourceFocusSelection = searchParams.get("source-focus") || "";
   const { data: searchResults, isLoading } = useQuery({
     queryKey: ["searchResults", searchQuery],
-    queryFn: () => getSearchResults(searchQuery),
-    enabled: !!searchQuery, // Fetch only when there's a query
+    queryFn: () =>
+      getSearchResults(
+        searchQuery + (sourceFocusSelection === "Discussions" ? " reddit" : "")
+      ),
+    enabled: !!searchQuery && sourceFocusSelection.length > 0, // Fetch only when there's a query
+  });
+  const {
+    data: bestCommentsForRelevantPosts,
+    isLoading: isLoadingBestComments,
+  } = useQuery({
+    queryKey: ["bestCommentsForRelevantPosts", searchQuery],
+    queryFn: () =>
+      getBestCommentsForRelevantPosts(
+        searchResults?.filter((result) => result.link.includes("reddit.com")) ??
+          []
+      ),
+    enabled: !!searchResults && searchResults.length > 0, // Fetch only when there are search results
   });
   console.log("Search Results:  ", searchResults);
   console.log("Search Query:  ", searchQuery);
+  console.log("Source Focus Selection: ", sourceFocusSelection);
   console.log("isLoading in Search Results: ", isLoading);
+  console.log("Best Comments: ", bestCommentsForRelevantPosts);
 
   return (
     <div className="grid-cols-12 md:grid gap-12 w-full max-w-[1100px] h-full">
@@ -42,7 +60,22 @@ export default function SearchResults() {
               searchResults={searchResults}
             />
           </div>
-          <Answer searchResults={searchResults} />
+          {/* {bestCommentsForRelevantPosts &&
+            Object.keys(bestCommentsForRelevantPosts)
+              .slice(0, 4)
+              .map((key, index) => (
+                <div key={index} className="dark:text-textMainDark">
+                  {bestCommentsForRelevantPosts[key][0].body}
+                </div>
+              ))} */}
+          {sourceFocusSelection === "Web" || sourceFocusSelection === "Chat" ? (
+            <Answer searchResults={searchResults} />
+          ) : !isLoadingBestComments ? (
+            <Answer
+              searchResults={searchResults}
+              bestCommentsFromRelevantPosts={bestCommentsForRelevantPosts}
+            />
+          ) : null}
         </div>
         <SummaryActions />
         <Separator className="w-full h-[0.2px] mt-9 mb-8 dark:bg-borderMain/50" />

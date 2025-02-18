@@ -1,6 +1,7 @@
 import React, { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
+import { useSourceFocus } from "./SourceFocusContext";
 
 interface SearchInputProps {
   setInputFocused: Dispatch<SetStateAction<boolean>>;
@@ -22,6 +23,7 @@ export default function SearchInput({
   setSelectedSuggestionIndex,
 }: SearchInputProps) {
   const router = useRouter();
+  const { sourceFocusSelection } = useSourceFocus();
 
   function handleKeyEvent(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     // console.log("Handle Key Event", e.key);
@@ -71,10 +73,12 @@ export default function SearchInput({
         setSearchInput(displaySuggestions[selectedSuggestionIndex]);
 
       if (selectedSuggestionIndex === -1) {
-        router.push(`/search/new?q=${searchInput}`);
+        router.push(
+          `/search/new?q=${searchInput}&source-focus=${sourceFocusSelection}`
+        );
       } else {
         router.push(
-          `/search/new?q=${displaySuggestions[selectedSuggestionIndex]}`
+          `/search/new?q=${displaySuggestions[selectedSuggestionIndex]}&source-focus=${sourceFocusSelection}`
         );
       }
     }

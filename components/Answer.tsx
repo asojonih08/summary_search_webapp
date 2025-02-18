@@ -7,12 +7,17 @@ import { useSearchParams } from "next/navigation";
 import { useChat } from "ai/react";
 import AnswerSkeleton from "./AnswerSkeleton";
 import { MemoizedMarkdown } from "./MemoizedMarkdown";
+import { RedditComment } from "@/actions/getRedditBestCommentsForPost";
 
 interface AnswerProps {
   searchResults?: SearchResult[];
+  bestCommentsFromRelevantPosts?: { [key: string]: RedditComment[] };
 }
 
-export default function Answer({ searchResults }: AnswerProps) {
+export default function Answer({
+  searchResults,
+  bestCommentsFromRelevantPosts,
+}: AnswerProps) {
   const [isStreaming, setIsStreaming] = useState(false);
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("q") || "";
@@ -20,10 +25,10 @@ export default function Answer({ searchResults }: AnswerProps) {
   let api = "";
   switch (sourceFocusSelection) {
     case "Web":
-      api = "/api/fastSummarize";
+      api = "/api/research";
       break;
     case "Discussions":
-      api = "/api/discussionsSummarize";
+      api = "/api/discussions-research";
       break;
     case "Chat":
       api = "/api/chat";
@@ -34,10 +39,6 @@ export default function Answer({ searchResults }: AnswerProps) {
 
   const chat = useChat({
     api: api,
-    body: {
-      searchQuery,
-      searchResultsItems: searchResults,
-    },
     onResponse: () => setIsStreaming(true),
     experimental_throttle: 50,
   });
@@ -77,26 +78,45 @@ export default function Answer({ searchResults }: AnswerProps) {
     //     setIsStreaming(false);
     //   }
     // };
-    const hSubmit = async () =>
+    const hSubmit = async () => {
+      let body;
+      switch (sourceFocusSelection) {
+        case "Web":
+          body = {
+            searchQuery,
+            searchResultsItems: searchResults,
+          };
+          break;
+        case "Discussions":
+          body = {
+            searchQuery,
+            bestCommentsFromRelevantPosts,
+          };
+          break;
+        case "Chat":
+          body = {
+            searchQuery,
+          };
+          break;
+      }
       chat.handleSubmit(new Event("submit") as Event, {
-        body: {
-          searchQuery,
-          searchResultsItems: searchResults,
-        },
+        body: body,
         allowEmptySubmit: true,
       });
+    };
 
     const handleSubmits = async () => {
-      if (searchQuery && searchResults) {
-        // const [o, t] = await Promise.all([hSubmit2(), hSubmit()]);
-        // console.log(o, t);
-        hSubmit();
-
-        setIsStreaming(false);
-      }
+      if (!searchQuery || !searchResults) return;
+      if (
+        sourceFocusSelection === "Discussions" &&
+        !bestCommentsFromRelevantPosts
+      )
+        return;
+      hSubmit();
+      setIsStreaming(false);
     };
     handleSubmits();
-  }, [searchQuery, searchResults]);
+  }, [searchQuery, searchResults, bestCommentsFromRelevantPosts]);
 
   const answerTitle = useMemo(
     () => (
