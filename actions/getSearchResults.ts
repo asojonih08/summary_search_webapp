@@ -20,13 +20,17 @@ export type SearchResult = {
 };
 
 export async function getSearchResults(
-  searchQuery: string
+  searchQuery: string,
+  searchFocus: string
 ): Promise<SearchResult[]> {
   if (searchQuery.length === 0) {
     throw new Error("Empty search query");
   }
   const api_key = process.env.GOOGLE_API_KEY;
-  const cx = process.env.GOOGLE_SEARCH_ENGINE_ID;
+  const cx =
+    searchFocus !== "Discussions"
+      ? process.env.GOOGLE_SEARCH_ENGINE_ID
+      : process.env.GOOGLE_DISCUSSIONS_SEARCH_ENGINE_ID;
   const url = `https://www.googleapis.com/customsearch/v1?$key=${api_key}&cx=${cx}&q=${searchQuery}`;
 
   try {
@@ -38,7 +42,7 @@ export async function getSearchResults(
 
     const data = await response.json();
 
-    // console.log(data.items);
+    console.log("Search Results: \n", data.items);
 
     return data.items;
   } catch (error) {

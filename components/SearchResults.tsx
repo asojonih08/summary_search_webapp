@@ -14,6 +14,7 @@ import { getSearchResults } from "@/actions/getSearchResults";
 import Answer from "./Answer";
 import HorizontalSearchImages from "./HorizontalSearchImages";
 import { getBestCommentsForRelevantPosts } from "@/actions/getBestCommentsForRelevantPosts";
+import DiscussionsComments from "./DiscussionsComments";
 
 export default function SearchResults() {
   const { sourcesOpen } = useSourcesOpen();
@@ -22,10 +23,7 @@ export default function SearchResults() {
   const sourceFocusSelection = searchParams.get("source-focus") || "";
   const { data: searchResults, isLoading } = useQuery({
     queryKey: ["searchResults", searchQuery],
-    queryFn: () =>
-      getSearchResults(
-        searchQuery + (sourceFocusSelection === "Discussions" ? " reddit" : "")
-      ),
+    queryFn: () => getSearchResults(searchQuery, sourceFocusSelection),
     enabled: !!searchQuery && sourceFocusSelection.length > 0, // Fetch only when there's a query
   });
   const {
@@ -68,14 +66,20 @@ export default function SearchResults() {
                   {bestCommentsForRelevantPosts[key][0].body}
                 </div>
               ))} */}
-          {sourceFocusSelection === "Web" || sourceFocusSelection === "Chat" ? (
+          {sourceFocusSelection === "Discussions" && (
+            <DiscussionsComments
+              bestCommentsForRelevantPosts={bestCommentsForRelevantPosts}
+              isLoadingBestComments={isLoadingBestComments}
+            />
+          )}
+          {sourceFocusSelection !== "Discussions" ? (
             <Answer searchResults={searchResults} />
-          ) : !isLoadingBestComments ? (
+          ) : (
             <Answer
               searchResults={searchResults}
-              bestCommentsFromRelevantPosts={bestCommentsForRelevantPosts}
+              bestCommentsForRelevantPosts={bestCommentsForRelevantPosts}
             />
-          ) : null}
+          )}
         </div>
         <SummaryActions />
         <Separator className="w-full h-[0.2px] mt-9 mb-8 dark:bg-borderMain/50" />

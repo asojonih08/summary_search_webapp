@@ -11,12 +11,12 @@ import { RedditComment } from "@/actions/getRedditBestCommentsForPost";
 
 interface AnswerProps {
   searchResults?: SearchResult[];
-  bestCommentsFromRelevantPosts?: { [key: string]: RedditComment[] };
+  bestCommentsForRelevantPosts?: { [key: string]: RedditComment[] };
 }
 
 export default function Answer({
   searchResults,
-  bestCommentsFromRelevantPosts,
+  bestCommentsForRelevantPosts,
 }: AnswerProps) {
   const [isStreaming, setIsStreaming] = useState(false);
   const searchParams = useSearchParams();
@@ -90,7 +90,7 @@ export default function Answer({
         case "Discussions":
           body = {
             searchQuery,
-            bestCommentsFromRelevantPosts,
+            bestCommentsForRelevantPosts,
           };
           break;
         case "Chat":
@@ -109,14 +109,14 @@ export default function Answer({
       if (!searchQuery || !searchResults) return;
       if (
         sourceFocusSelection === "Discussions" &&
-        !bestCommentsFromRelevantPosts
+        !bestCommentsForRelevantPosts
       )
         return;
       hSubmit();
       setIsStreaming(false);
     };
     handleSubmits();
-  }, [searchQuery, searchResults, bestCommentsFromRelevantPosts]);
+  }, [searchQuery, searchResults, bestCommentsForRelevantPosts]);
 
   const answerTitle = useMemo(
     () => (

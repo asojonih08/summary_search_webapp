@@ -24,30 +24,36 @@ export async function generateDiscussionsPrompt(
     Here are the sources with each source labeled and numbered for reference:
 
     `;
-  console.log("Best Comments in Posts: ", bestCommentsInPosts);
+  // console.log("Best Comments in Posts: ", bestCommentsInPosts);
   if (bestCommentsInPosts && Object.keys(bestCommentsInPosts).length > 0) {
-    console.log(
-      "Authors: ",
-      Object.keys(bestCommentsInPosts).map(
-        (key) => bestCommentsInPosts[key][0].author
-      )
-    );
+    // console.log(
+    //   "Authors: ",
+    //   Object.keys(bestCommentsInPosts).map(
+    //     (key) => bestCommentsInPosts[key][0].author
+    //   )
+    // );
     let index = 1;
     for (const key of Object.keys(bestCommentsInPosts)) {
-      prompt += `\n\n[${index}]:\n\nPost Title: ${key
-        .split("/")
-        .at(-2)
-        ?.split("_")
-        .join(" ")}\n`;
-      for (const comment of bestCommentsInPosts[key]) {
-        if (
-          comment.body &&
-          comment.body !== "[deleted]" &&
-          comment.body.length > 0
-        ) {
-          prompt += "Author: " + comment.author + "\n";
-          prompt += "Comment Score: " + comment.score.toString() + "\n";
-          prompt += "Comment:\n" + comment.body;
+      if (
+        bestCommentsInPosts[key][0].score &&
+        bestCommentsInPosts[key][0].score >= 5
+      ) {
+        prompt += `\n\n[${index}]:\n\nPost Title: ${key
+          .split("/")
+          .at(-2)
+          ?.split("_")
+          .join(" ")}\n`;
+        for (const comment of bestCommentsInPosts[key]) {
+          if (
+            comment.body &&
+            comment.body !== "[deleted]" &&
+            comment.body.length > 0 &&
+            comment.score >= 5
+          ) {
+            prompt += "Author: " + comment.author + "\n";
+            prompt += "Comment Score: " + comment.score.toString() + "\n";
+            prompt += "Comment:\n" + comment.body;
+          }
         }
       }
       index++;
@@ -55,11 +61,11 @@ export async function generateDiscussionsPrompt(
     prompt +=
       "Please generate the summary in accordance with these instructions. In your response do not include any reference to this prompt.";
   }
-  console.log(
-    "Discussions Prompt: \n",
-    prompt,
-    "\nPrompt length: ",
-    prompt.split(" ").length
-  );
+  // console.log(
+  //   "Discussions Prompt: \n",
+  //   prompt,
+  //   "\nPrompt length: ",
+  //   prompt.split(" ").length
+  // );
   return prompt;
 }
