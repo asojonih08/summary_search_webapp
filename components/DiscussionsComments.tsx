@@ -5,6 +5,8 @@ import { TbArrowBigDown, TbArrowBigUp } from "react-icons/tb";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm"; // Enables GitHub-style Markdown (tables, lists, etc.)
 import DiscussionCommentTooltip from "./DiscussionCommentTooltip";
+import DiscussionsCommentsSkeleton from "./DiscussionsCommentsSkeleton";
+import { redirect } from "next/navigation";
 
 interface DiscussionsCommentsProps {
   bestCommentsForRelevantPosts?: { [key: string]: RedditComment[] };
@@ -31,7 +33,14 @@ export default function DiscussionsComments({
       }
     }
   }
-  return comments.length > 0 ? (
+  function handleCommentClick(link: string) {
+    window.open(link, "_blank");
+  }
+  const decodeHTML = (html: string) => {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.documentElement.textContent;
+  };
+  return (
     <div className="w-full h-full flex flex-col gap-3">
       <span className="flex items-center gap-2">
         <Lightbulb className="dark:text-textMainDark h-[17px] w-[17px]" />
@@ -40,16 +49,11 @@ export default function DiscussionsComments({
       {!isLoadingBestComments ? (
         <div className="flex flex-col gap-3 px-1">
           {comments.map((comment, index) => {
-            function isAlphabetRegex(char: string) {
-              return /^[a-zA-Z]$/.test(char);
-            }
-
             if (comment.body.split("\n").length > 3) {
               return (
                 <DiscussionCommentTooltip key={index} comment={comment}>
-                  <a
-                    target={"_blank"}
-                    href={comment.link}
+                  <div
+                    onClick={() => handleCommentClick(comment.link)}
                     className="text-pretty w-full md:w-auto h-auto flex flex-col gap-1.5 dark:hover:bg-offsetPlusDark dark:text-textMainDark border-[0.3px] border-borderMain/10 ring-[0.3px] dark:ring-borderMain/10 divide-[0.3px] dark:divide-borderMain/10 dark:bg-mainBackgroundDark rounded-lg p-2.5 transition-all duration-300 cursor-pointer"
                   >
                     <h5 className="text-[17.5px] dark:text-textMainDark">
@@ -75,19 +79,18 @@ export default function DiscussionsComments({
                         r/{comment.subreddit}
                       </span>
                     </div>
-                  </a>
+                  </div>
                 </DiscussionCommentTooltip>
               );
             } else {
               return (
-                <a
+                <div
+                  onClick={() => handleCommentClick(comment.link)}
                   key={index}
-                  target={"_blank"}
-                  href={comment.link}
                   className="text-pretty w-full md:w-auto h-auto flex flex-col gap-1.5 dark:hover:bg-offsetPlusDark dark:text-textMainDark border-[0.3px] border-borderMain/10 ring-[0.3px] dark:ring-borderMain/10 divide-[0.3px] dark:divide-borderMain/10 dark:bg-mainBackgroundDark rounded-lg p-2.5 transition-all duration-300 cursor-pointer"
                 >
                   <h5 className="text-[17.5px] dark:text-textMainDark">
-                    {comment.postTitle}
+                    {decodeHTML(comment.postTitle)}
                   </h5>
                   <div className="text-sm inline-block text-pretty break-words leading-normal prose dark:prose-invert prose-h1:text-xl prose-h2:text-lg prose-h3:text-[17px] prose-h4:text-[16.5px] prose-table:mb-12  prose-p:dark:text-textMainDark/80 prose-strong:dark:text-textMainDark prose-strong:underline prose-strong:underline-offset-2 prose-strong:decoration-textOffDark prose-li:list-outside prose-ol:space-y-6 prose-ol:my-4 dark:text-textMainDark">
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -101,6 +104,7 @@ export default function DiscussionsComments({
                       </ReactMarkdown>
                     </div>
                   )}
+
                   <div className="text-sm flex gap-1.5 items-center dark:text-textMainDark/75 mt-1">
                     <TbArrowBigUp className="w-5 h-5" />
                     <span className="h-full text-xs">{comment.score}</span>
@@ -109,14 +113,14 @@ export default function DiscussionsComments({
                       r/{comment.subreddit}
                     </span>
                   </div>
-                </a>
+                </div>
               );
             }
           })}
         </div>
       ) : (
-        <div></div>
+        <DiscussionsCommentsSkeleton />
       )}
     </div>
-  ) : null;
+  );
 }

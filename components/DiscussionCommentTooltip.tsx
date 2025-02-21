@@ -20,21 +20,27 @@ export default function DiscussionCommentTooltip({
   children,
   comment,
 }: DiscussionCommentTooltipProps) {
+  function handleCommentClick(link: string) {
+    window.open(link, "_blank");
+  }
+  const decodeHTML = (html: string) => {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.documentElement.textContent;
+  };
   return (
     <TooltipProvider delayDuration={300}>
       <Tooltip>
         <TooltipTrigger asChild>{children}</TooltipTrigger>
         <TooltipContent
           side="bottom"
-          className="dark:bg-contentBackgroundDark lg:w-[710px] md:w-[94%] md:mx-4 md:flex md:flex-col sm:w-[100%] xs:w-[78%] w-[70%] ml-2 dark:border-borderMain/50 shadow-lg rounded-lg  py-[14px] px-4 h-auto max-h-[480px]  gap-1.5 text-left"
+          className="dark:bg-contentBackgroundDark lg:w-[710px] md:w-[94%] md:mx-4 md:flex md:flex-col sm:w-[100%] xs:w-[78%] w-[70%] ml-2 dark:border-borderMain/50 shadow-lg rounded-lg  py-[14px] px-4 h-auto gap-1.5 text-left"
         >
-          <a
-            target={"_blank"}
-            href={comment ? comment.link : ""}
+          <div
+            onClick={() => handleCommentClick(comment ? comment.link : "")}
             className="text-pretty w-full h-full flex flex-col gap-1.5 dark:text-textMainDark border-[0.3px] border-borderMain/10 ring-[0.3px] dark:ring-borderMain/10 divide-[0.3px] dark:divide-borderMain/10 rounded-lg p-2.5 transition-all duration-300 cursor-pointer"
           >
             <h5 className="text-[17.5px] dark:text-textMainDark">
-              {comment ? comment.postTitle : ""}
+              {comment ? decodeHTML(comment.postTitle) : ""}
             </h5>
             <div className="text-sm inline-block text-pretty break-words leading-normal prose dark:prose-invert prose-h1:text-xl prose-h2:text-lg prose-h3:text-[17px] prose-h4:text-[16.5px] prose-table:mb-12  prose-p:dark:text-textMainDark/80 prose-strong:dark:text-textMainDark prose-strong:underline prose-strong:underline-offset-2 prose-strong:decoration-textOffDark prose-li:list-outside prose-ol:space-y-6 prose-ol:my-4 dark:text-textMainDark">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -71,7 +77,7 @@ export default function DiscussionCommentTooltip({
                 </Button>
               )}
             </div>
-          </a>
+          </div>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
