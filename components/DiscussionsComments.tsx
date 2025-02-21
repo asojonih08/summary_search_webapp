@@ -2,7 +2,9 @@ import { RedditComment } from "@/actions/getRedditBestCommentsForPost";
 import React from "react";
 import { Lightbulb } from "lucide-react";
 import { TbArrowBigDown, TbArrowBigUp } from "react-icons/tb";
-import { title } from "process";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm"; // Enables GitHub-style Markdown (tables, lists, etc.)
+import DiscussionCommentTooltip from "./DiscussionCommentTooltip";
 
 interface DiscussionsCommentsProps {
   bestCommentsForRelevantPosts?: { [key: string]: RedditComment[] };
@@ -20,7 +22,7 @@ export default function DiscussionsComments({
       let bestComments = bestCommentsForRelevantPosts[key];
       if (
         bestComments[0].score &&
-        bestComments[0].score >= 20 &&
+        bestComments[0].score >= 15 &&
         bestComments[0].body !== "[removed]" &&
         bestComments[0].body !== "[deleted]"
       ) {
@@ -41,30 +43,75 @@ export default function DiscussionsComments({
             function isAlphabetRegex(char: string) {
               return /^[a-zA-Z]$/.test(char);
             }
-            let title = postTitles[index]
-              ? isAlphabetRegex(postTitles[index][0])
-                ? postTitles[index][0].toUpperCase() +
-                  postTitles[index].substring(1)
-                : postTitles[index]
-              : "";
-            return (
-              <a
-                key={index}
-                className="text-pretty w-full md:w-auto h-auto flex flex-col gap-1 dark:hover:bg-offsetPlusDark dark:text-textMainDark border-[0.3px] border-borderMain/10 ring-[0.3px] dark:ring-borderMain/10 divide-[0.3px] dark:divide-borderMain/10 dark:bg-mainBackgroundDark rounded-lg p-2 transition-all duration-300 cursor-pointer"
-              >
-                <h5 className="text-[17.5px] dark:text-textMainDark">
-                  {title}
-                </h5>
-                <div className="-mt-0.5 text-pretty text-sm line-clamp-4 dark:text-textMainDark/75">
-                  {comment.body}
-                </div>
-                <div className="text-sm flex gap-1.5 items-center dark:text-textMainDark/75">
-                  <TbArrowBigUp className="w-5 h-5" />
-                  <span className="h-full text-xs">{comment.score}</span>
-                  <TbArrowBigDown className="w-5 h-5" />
-                </div>
-              </a>
-            );
+
+            if (comment.body.split("\n").length > 3) {
+              return (
+                <DiscussionCommentTooltip key={index} comment={comment}>
+                  <a
+                    target={"_blank"}
+                    href={comment.link}
+                    className="text-pretty w-full md:w-auto h-auto flex flex-col gap-1.5 dark:hover:bg-offsetPlusDark dark:text-textMainDark border-[0.3px] border-borderMain/10 ring-[0.3px] dark:ring-borderMain/10 divide-[0.3px] dark:divide-borderMain/10 dark:bg-mainBackgroundDark rounded-lg p-2.5 transition-all duration-300 cursor-pointer"
+                  >
+                    <h5 className="text-[17.5px] dark:text-textMainDark">
+                      {comment.postTitle}
+                    </h5>
+                    <div className="text-sm inline-block text-pretty break-words leading-normal prose dark:prose-invert prose-h1:text-xl prose-h2:text-lg prose-h3:text-[17px] prose-h4:text-[16.5px] prose-table:mb-12  prose-p:dark:text-textMainDark/80 prose-strong:dark:text-textMainDark prose-strong:underline prose-strong:underline-offset-2 prose-strong:decoration-textOffDark prose-li:list-outside prose-ol:space-y-6 prose-ol:my-4 dark:text-textMainDark">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {comment.body.split("\n").slice(0, 3).join("\n")}
+                      </ReactMarkdown>
+                    </div>
+                    {comment.body.split("\n").length > 3 && (
+                      <div className="text-sm text-pretty break-words leading-normal prose dark:prose-invert prose-h1:text-xl prose-h2:text-lg prose-h3:text-[17px] prose-h4:text-[16.5px] prose-table:mb-12 prose-p:dark:text-textMainDark/80 prose-strong:dark:text-textMainDark prose-strong:underline prose-strong:underline-offset-2 prose-strong:decoration-textOffDark prose-li:list-outside prose-ol:space-y-6 -mt-1.5 -my-1 prose-li:bg-gradient-to-b prose-li:from-white prose-li:via-textMainDark/50 prose-li:my-0 prose-li:to-transparent inline-block prose-li:text-transparent prose-li:bg-clip-text">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                          {comment.body.split("\n")[3]}
+                        </ReactMarkdown>
+                      </div>
+                    )}
+                    <div className="text-sm flex gap-1.5 items-center dark:text-textMainDark/75 mt-1">
+                      <TbArrowBigUp className="w-5 h-5" />
+                      <span className="h-full text-xs">{comment.score}</span>
+                      <TbArrowBigDown className="w-5 h-5" />
+                      <span className="dark:text-superDark/80 ml-2">
+                        r/{comment.subreddit}
+                      </span>
+                    </div>
+                  </a>
+                </DiscussionCommentTooltip>
+              );
+            } else {
+              return (
+                <a
+                  key={index}
+                  target={"_blank"}
+                  href={comment.link}
+                  className="text-pretty w-full md:w-auto h-auto flex flex-col gap-1.5 dark:hover:bg-offsetPlusDark dark:text-textMainDark border-[0.3px] border-borderMain/10 ring-[0.3px] dark:ring-borderMain/10 divide-[0.3px] dark:divide-borderMain/10 dark:bg-mainBackgroundDark rounded-lg p-2.5 transition-all duration-300 cursor-pointer"
+                >
+                  <h5 className="text-[17.5px] dark:text-textMainDark">
+                    {comment.postTitle}
+                  </h5>
+                  <div className="text-sm inline-block text-pretty break-words leading-normal prose dark:prose-invert prose-h1:text-xl prose-h2:text-lg prose-h3:text-[17px] prose-h4:text-[16.5px] prose-table:mb-12  prose-p:dark:text-textMainDark/80 prose-strong:dark:text-textMainDark prose-strong:underline prose-strong:underline-offset-2 prose-strong:decoration-textOffDark prose-li:list-outside prose-ol:space-y-6 prose-ol:my-4 dark:text-textMainDark">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {comment.body.split("\n").slice(0, 3).join("\n")}
+                    </ReactMarkdown>
+                  </div>
+                  {comment.body.split("\n").length > 5 && (
+                    <div className="text-sm text-pretty break-words leading-normal prose dark:prose-invert prose-h1:text-xl prose-h2:text-lg prose-h3:text-[17px] prose-h4:text-[16.5px] prose-table:mb-12 prose-p:dark:text-textMainDark/80 prose-strong:dark:text-textMainDark prose-strong:underline prose-strong:underline-offset-2 prose-strong:decoration-textOffDark prose-li:list-outside prose-ol:space-y-6 -mt-1.5 -my-1 prose-li:bg-gradient-to-b prose-li:from-white prose-li:via-textMainDark/50 prose-li:my-0 prose-li:to-transparent inline-block prose-li:text-transparent prose-li:bg-clip-text">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {comment.body.split("\n")[3]}
+                      </ReactMarkdown>
+                    </div>
+                  )}
+                  <div className="text-sm flex gap-1.5 items-center dark:text-textMainDark/75 mt-1">
+                    <TbArrowBigUp className="w-5 h-5" />
+                    <span className="h-full text-xs">{comment.score}</span>
+                    <TbArrowBigDown className="w-5 h-5" />
+                    <span className="dark:text-superDark/80 ml-2">
+                      r/{comment.subreddit}
+                    </span>
+                  </div>
+                </a>
+              );
+            }
           })}
         </div>
       ) : (

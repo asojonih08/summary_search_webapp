@@ -28,8 +28,8 @@ export default function AllSourcesList({ searchResults }: AllSourcesListProps) {
         exit={{ opacity: 0 }}
         className="isolate sticky top-[48px] md:block hidden"
       >
-        <div className="grid flex-col gap-2 h-[calc(100vh_-48px-5rem)] border border-borderMain/50 rounded-sm overflow-y-hidden">
-          <span className="dark:text-textMainDark text-lg font-medium p-2 border-b border-borderMain/50 flex justify-between items-center pr-3">
+        <div className="grid flex-col border border-borderMain/50 rounded-sm overflow-y-hidden">
+          <span className="dark:text-textMainDark text-lg h-12 font-medium p-2 border-b border-borderMain/50 flex justify-between items-center pr-3">
             <div className="flex gap-1.5 items-center">
               <PiCirclesFourBold className="dark:text-textMainDark h-[18px] w-[18px] rotate-45 mb-0.5" />
               <h2>{searchResults ? searchResults.length : "-"} sources</h2>
@@ -44,7 +44,7 @@ export default function AllSourcesList({ searchResults }: AllSourcesListProps) {
           </span>
 
           {searchResults ? (
-            <div className="flex flex-col gap-2 px-2 pb-2 overflow-y-scroll ">
+            <div className="flex flex-col gap-2 px-2 py-2 overflow-y-scroll ">
               {searchResults.map(
                 (searchResult: SearchResult, index: number) => (
                   <SourceCardFull

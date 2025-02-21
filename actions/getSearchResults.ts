@@ -31,7 +31,8 @@ export async function getSearchResults(
     searchFocus !== "Discussions"
       ? process.env.GOOGLE_SEARCH_ENGINE_ID
       : process.env.GOOGLE_DISCUSSIONS_SEARCH_ENGINE_ID;
-  const url = `https://www.googleapis.com/customsearch/v1?$key=${api_key}&cx=${cx}&q=${searchQuery}`;
+  let url = `https://www.googleapis.com/customsearch/v1?$key=${api_key}&cx=${cx}&q=${searchQuery}`;
+  if (searchFocus === "Discussions") url += "&num=5";
 
   try {
     const response = await fetch(url);
@@ -42,7 +43,7 @@ export async function getSearchResults(
 
     const data = await response.json();
 
-    console.log("Search Results: \n", data.items);
+    // console.log("Search Results: \n", data.items);
 
     return data.items;
   } catch (error) {

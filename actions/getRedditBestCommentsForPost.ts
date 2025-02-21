@@ -2,11 +2,13 @@
 import { extractPostId } from "@/lib/extractPostId";
 
 export type RedditComment = {
+  postTitle: string;
   author: string;
   id: string;
   body: string;
   score: number;
   link: string;
+  subreddit: string;
 };
 
 export async function getRedditBestCommentsForPost(
@@ -32,13 +34,17 @@ export async function getRedditBestCommentsForPost(
 
     if (!response.ok) throw new Error("Failed to fetch Reddit comments");
     const data = await response.json();
-    // console.log("Best Comments: ", data[1].data.children);
+
+    console.log("Best Comments: ", data[1].data.children);
+    const postTitle = data[0].data.children[0].data.title;
     const commentsList = data[1].data.children.map((comment: any) => ({
+      postTitle,
       author: comment.data.author,
       id: comment.data.id,
       body: comment.data.body,
       score: comment.data.score,
       link: "https://reddit.com" + comment.data.permalink,
+      subreddit: comment.data.subreddit,
     }));
 
     // console.log("Extracted Comments:", commentsList);
