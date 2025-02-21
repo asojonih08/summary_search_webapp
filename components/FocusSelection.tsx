@@ -12,12 +12,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "./ui/button";
-import { ListFilter } from "lucide-react";
 import { TbWorld } from "react-icons/tb";
-import DiscussionIcon from "./DiscussionIcon";
 import { GoCommentDiscussion } from "react-icons/go";
-import AiIcon from "./AiIcon";
-import { title } from "process";
+
 import AiSquareIcon from "./AiSquareIcon";
 import { useSourceFocus } from "./SourceFocusContext";
 const focusOptions = [

@@ -6,7 +6,6 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm"; // Enables GitHub-style Markdown (tables, lists, etc.)
 import DiscussionCommentTooltip from "./DiscussionCommentTooltip";
 import DiscussionsCommentsSkeleton from "./DiscussionsCommentsSkeleton";
-import { redirect } from "next/navigation";
 
 interface DiscussionsCommentsProps {
   bestCommentsForRelevantPosts?: { [key: string]: RedditComment[] };
@@ -17,11 +16,11 @@ export default function DiscussionsComments({
   bestCommentsForRelevantPosts,
   isLoadingBestComments,
 }: DiscussionsCommentsProps) {
-  let comments = [];
-  let postTitles = [];
+  const comments = [];
+  const postTitles = [];
   if (bestCommentsForRelevantPosts) {
     for (const key of Object.keys(bestCommentsForRelevantPosts)) {
-      let bestComments = bestCommentsForRelevantPosts[key];
+      const bestComments = bestCommentsForRelevantPosts[key];
       if (
         bestComments[0].score &&
         bestComments[0].score >= 15 &&
@@ -57,7 +56,7 @@ export default function DiscussionsComments({
                     className="text-pretty w-full md:w-auto h-auto flex flex-col gap-1.5 dark:hover:bg-offsetPlusDark dark:text-textMainDark border-[0.3px] border-borderMain/10 ring-[0.3px] dark:ring-borderMain/10 divide-[0.3px] dark:divide-borderMain/10 dark:bg-mainBackgroundDark rounded-lg p-2.5 transition-all duration-300 cursor-pointer"
                   >
                     <h5 className="text-[17.5px] dark:text-textMainDark">
-                      {comment.postTitle}
+                      {decodeHTML(comment.postTitle)}
                     </h5>
                     <div className="text-sm inline-block text-pretty break-words leading-normal prose dark:prose-invert prose-h1:text-xl prose-h2:text-lg prose-h3:text-[17px] prose-h4:text-[16.5px] prose-table:mb-12  prose-p:dark:text-textMainDark/80 prose-strong:dark:text-textMainDark prose-strong:underline prose-strong:underline-offset-2 prose-strong:decoration-textOffDark prose-li:list-outside prose-ol:space-y-6 prose-ol:my-4 dark:text-textMainDark">
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>

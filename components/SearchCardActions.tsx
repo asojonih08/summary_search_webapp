@@ -2,14 +2,8 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { ListFilter, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import FocusSelection from "./FocusSelection";
 import { useSourceFocus } from "./SourceFocusContext";
 
