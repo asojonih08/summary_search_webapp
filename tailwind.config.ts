@@ -17,6 +17,7 @@ export default {
         mainBackgroundDark: "#202222",
         contentBackgroundDark: "#191A1A",
         borderMain: "#3D3F40",
+        borderMainDark: "#403e3f",
         textMainDark: "#e8e8e8",
         textOffDark: "#8D9191",
         caretColor: "#15808d",

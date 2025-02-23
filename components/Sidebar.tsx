@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
@@ -15,6 +14,20 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useSidebarOpen } from "./SidebarOpenContext";
+import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { FaChevronDown, FaUser } from "react-icons/fa6";
+import { LogOut } from "lucide-react";
+import { signOutUser } from "@/actions/supabase/signOutUser";
+import { useQuery } from "@tanstack/react-query";
+import { getUser } from "@/actions/supabase/getUser";
+import { createClient } from "@/utils/supabase/client";
+import { AvatarImage } from "./ui/avatar";
 
 const containerVariants = {
   close: {
@@ -37,6 +50,27 @@ const containerVariants = {
 export default function Sidebar() {
   const { isOpen, setIsOpen } = useSidebarOpen();
   const pathname = usePathname();
+  const supabase = createClient();
+
+  const { data: user } = useQuery({
+    queryKey: ["user"],
+    queryFn: async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      return user;
+    },
+    staleTime: 0,
+  });
+
+  console.log("User: ", user);
+
+  function handleSignOut() {
+    const signOut = async () => {
+      await signOutUser();
+    };
+    signOut();
+  }
 
   return (
     <motion.nav
@@ -186,39 +220,81 @@ export default function Sidebar() {
       </div>
       <div className="sticky bottom-16">
         {!isOpen && (
-          <TooltipProvider delayDuration={150}>
-            <Tooltip>
-              <TooltipTrigger>
-                <div
-                  className="flex items-center justify-center dark:bg-offsetPlusDark dark:hover:bg-offsetPlusDark group rounded-full h-10 w-10 cursor-pointer"
-                  onClick={() => setIsOpen(!isOpen)}
-                >
-                  <svg
-                    className="dark:text-textMainDark dark:stroke-textMainDark group-hover:dark:text-textOffDark transition-all duration-150 ease-out h-[22px] w-[22px] flex items-center justify-center"
-                    aria-hidden="true"
-                    focusable="false"
-                    data-prefix="far"
-                    data-icon="arrow-right-from-line"
-                    role="img"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 448 512"
+          <div className="flex flex-col items-center ">
+            <TooltipProvider delayDuration={150}>
+              <Tooltip>
+                <TooltipTrigger>
+                  <div
+                    className="flex items-center justify-center dark:bg-offsetPlusDark dark:hover:bg-offsetPlusDark group rounded-full h-10 w-10 cursor-pointer"
+                    onClick={() => setIsOpen(!isOpen)}
                   >
-                    <path
-                      fill="currentColor"
-                      d="M48 88c0-13.3-10.7-24-24-24S0 74.7 0 88L0 424c0 13.3 10.7 24 24 24s24-10.7 24-24L48 88zM440.4 273.5c4.8-4.5 7.6-10.9 7.6-17.5s-2.7-12.9-7.6-17.5l-136-128c-9.7-9.1-24.8-8.6-33.9 1s-8.6 24.8 1 33.9L363.5 232 280 232l-128 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l128 0 83.5 0-91.9 86.5c-9.7 9.1-10.1 24.3-1 33.9s24.3 10.1 33.9 1l136-128z"
-                    ></path>
-                  </svg>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent
-                side="right"
-                sideOffset={6}
-                className="dark:bg-offsetPlusDark cursor-default px-2.5 py-1 rounded-sm"
-              >
-                <p className="text-xs text-[#E8E8E6]">Expand</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+                    <svg
+                      className="dark:text-textMainDark dark:stroke-textMainDark group-hover:dark:text-textOffDark transition-all duration-150 ease-out h-[22px] w-[22px] flex items-center justify-center"
+                      aria-hidden="true"
+                      focusable="false"
+                      data-prefix="far"
+                      data-icon="arrow-right-from-line"
+                      role="img"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M48 88c0-13.3-10.7-24-24-24S0 74.7 0 88L0 424c0 13.3 10.7 24 24 24s24-10.7 24-24L48 88zM440.4 273.5c4.8-4.5 7.6-10.9 7.6-17.5s-2.7-12.9-7.6-17.5l-136-128c-9.7-9.1-24.8-8.6-33.9 1s-8.6 24.8 1 33.9L363.5 232 280 232l-128 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l128 0 83.5 0-91.9 86.5c-9.7 9.1-10.1 24.3-1 33.9s24.3 10.1 33.9 1l136-128z"
+                      ></path>
+                    </svg>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent
+                  side="right"
+                  sideOffset={6}
+                  className="dark:bg-offsetPlusDark cursor-default px-2.5 py-1 rounded-sm"
+                >
+                  <p className="text-xs text-[#E8E8E6]">Expand</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            {user && (
+              <DropdownMenu>
+                <DropdownMenuTrigger className="focus-visible:outline-none">
+                  <div className="border-t dark:border-borderMainDark/50 pt-2.5 mt-2.5 ">
+                    <div className="w-10 h-10 rounded-full  md:dark:hover:bg-offsetPlusDark transition-all duration-200 flex items-center justify-center relative">
+                      <Avatar className="w-[34px] h-[34px] dark:bg-offsetPlusDark rounded-full flex items-center justify-center">
+                        {user.app_metadata.provider === "google" && (
+                          <AvatarImage
+                            className="rounded-full"
+                            src={user.user_metadata.avatar_url}
+                          />
+                        )}
+                        <AvatarFallback className={""}>
+                          {" "}
+                          <FaUser className="dark:text-textOffDark" />
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="dark:bg-mainBackgroundDark rounded-full flex items-center justify-center p-[2px] h-3.5 w-3.5 absolute bottom-0 -right-1">
+                        <FaChevronDown className="text-textOffDark/50 h-2.5 w-2.5" />
+                      </div>
+                    </div>
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="start"
+                  sideOffset={-14}
+                  className="w-[220px] dark:text-textMainDark rounded-md duration-150 p-2 dark:divide-borderMainDark/50 dark:ring-borderMainDark/50 dark:border-borderMainDark/50 dark:bg-backgroundDark"
+                >
+                  <DropdownMenuItem className="cursor-pointer text-center h-10 flex items-center">
+                    <FaUser /> Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={handleSignOut}
+                    className="cursor-pointer text-center h-10 flex items-center"
+                  >
+                    <LogOut /> Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
         )}
       </div>
     </motion.nav>
