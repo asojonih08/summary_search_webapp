@@ -1,87 +1,15 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { Auth } from "@supabase/auth-ui-react";
-import { createClient } from "@/utils/supabase/client";
-import {
-  // Import predefined theme
-  ThemeSupa,
-} from "@supabase/auth-ui-shared";
-import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
-import { signInWithGoogle } from "@/app/login/actions";
+import { login } from "@/app/login/actions";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import GoogleOAuth from "./GoogleOAuth";
 
 export default function LoginSignUpForm() {
-  const supabase = createClient();
-
-  const router = useRouter();
-
-  const [user, setUser] = useState<any>();
-  const [view, setView] = useState("sign_in");
-
-  useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-      if (user) {
-        router.push("/"); // Redirect to home page if user is logged in
-      }
-    };
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (session?.user) {
-          setUser(session.user);
-          router.push("/"); // Redirect to home page after login
-        }
-      }
-    );
-
-    getUser();
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, [supabase, router]);
-
   return (
-    <div className="md:w-[70%] w-[82%] max-w-[600px] transition-all duration-300">
-      {!user ? (
-        <>
-          <Button
-            onClick={() => signInWithGoogle()}
-            variant="outline"
-            className="w-full dark:bg-offsetPlusDark dark:text-textMainDark dark:hover:bg-[#464949]"
-          >
-            <svg
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 48 48"
-              xmlnsXlink="http://www.w3.org/1999/xlink"
-              style={{ display: "block" }}
-            >
-              <path
-                fill="#EA4335"
-                d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
-              ></path>
-              <path
-                fill="#4285F4"
-                d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
-              ></path>
-              <path
-                fill="#FBBC05"
-                d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
-              ></path>
-              <path
-                fill="#34A853"
-                d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
-              ></path>
-              <path fill="none" d="M0 0h48v48H0z"></path>
-            </svg>
-            Sign in with Google
-          </Button>
-          <Auth
+    <div className="md:w-[70%] w-[82%] max-w-[600px] transition-all duration-300 h-[340px]">
+      <>
+        <GoogleOAuth />
+        {/* <Auth
             supabaseClient={supabase}
             appearance={{
               theme: ThemeSupa,
@@ -104,9 +32,41 @@ export default function LoginSignUpForm() {
             }}
             theme="dark"
             providers={[]}
-          ></Auth>
-        </>
-      ) : null}
+          ></Auth> */}
+        <form>
+          <div className="flex flex-col gap-3">
+            <div className="grid gap-2 mt-5">
+              <Label className="dark:text-textMainDark" htmlFor="email">
+                Email
+              </Label>
+              <Input
+                name="email"
+                id="email"
+                type="email"
+                placeholder="m@example.com"
+                required
+              />
+            </div>
+            <div className="grid gap-2">
+              <div className="flex items-center">
+                <Label className="dark:text-textMainDark" htmlFor="password">
+                  Password
+                </Label>
+                <a
+                  href="#"
+                  className="ml-auto text-sm underline-offset-4 hover:underline dark:text-textMainDark"
+                >
+                  Forgot your password?
+                </a>
+              </div>
+              <Input name="password" id="password" type="password" required />
+            </div>
+            <Button type="submit" formAction={login} className="w-full">
+              Login
+            </Button>
+          </div>
+        </form>
+      </>
     </div>
   );
 }

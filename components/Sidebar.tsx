@@ -24,10 +24,8 @@ import {
 import { FaChevronDown, FaUser } from "react-icons/fa6";
 import { LogOut } from "lucide-react";
 import { signOutUser } from "@/actions/supabase/signOutUser";
-import { useQuery } from "@tanstack/react-query";
-import { getUser } from "@/actions/supabase/getUser";
-import { createClient } from "@/utils/supabase/client";
 import { AvatarImage } from "./ui/avatar";
+import { User } from "@supabase/supabase-js";
 
 const containerVariants = {
   close: {
@@ -46,22 +44,12 @@ const containerVariants = {
     },
   },
 };
-
-export default function Sidebar() {
+interface SidebarProps {
+  user: User | null;
+}
+export default function Sidebar({ user }: SidebarProps) {
   const { isOpen, setIsOpen } = useSidebarOpen();
   const pathname = usePathname();
-  const supabase = createClient();
-
-  const { data: user } = useQuery({
-    queryKey: ["user"],
-    queryFn: async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      return user;
-    },
-    staleTime: 0,
-  });
 
   console.log("User: ", user);
 

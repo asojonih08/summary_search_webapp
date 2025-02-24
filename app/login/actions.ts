@@ -46,10 +46,12 @@ export async function signup(formData: FormData) {
 }
 
 export async function signInWithGoogle() {
+  const baseUrl = process.env.NEXT_SITE_URL;
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
+      redirectTo: `${baseUrl}/auth/callback`,
       queryParams: {
         access_type: "offline",
         prompt: "consent",
@@ -62,5 +64,6 @@ export async function signInWithGoogle() {
     redirect("/error");
   }
 
+  console.log("Sign In With OAuth Redirect URL: ", data.url);
   redirect(data.url);
 }

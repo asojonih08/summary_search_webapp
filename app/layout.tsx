@@ -7,7 +7,7 @@ import { SidebarOpenProvider } from "@/components/SidebarOpenContext";
 import { SourcesOpenProvider } from "@/components/SourcesOpenContext";
 import MobileNavigation from "@/components/MobileNavigation";
 import { SourceFocusProvider } from "@/components/SourceFocusContext";
-import { getUser } from "@/actions/supabase/getUser";
+import { createClient } from "@/utils/supabase/server";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -59,6 +59,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   return (
     <ReactQueryClientProvider>
       <SourceFocusProvider>
@@ -71,7 +75,7 @@ export default async function RootLayout({
                 <main>
                   <div className="flex md:flex-row flex-col md:h-[100%] md:min-h-[100dvh] h-[100%]">
                     <div className="md:block hidden min-h-full">
-                      <Sidebar />
+                      <Sidebar user={user} />
                     </div>
 
                     <div className="dark:bg-mainBackgroundDark w-full md:h-auto h-[100%] flex justify-center">
